@@ -9,7 +9,7 @@ cx_Freeze.setup(
     name = "Spacebar Clicker",
     options = {
         "build_exe": {
-            "packages": ["pygame", "json", "sys", "appdirs"],
+            "packages": ["pygame", "json", "sys", "appdirs", "os", "random"],
             "include_files": ["assets", "README.md", "LICENSE.md", "version.txt"]
         }
     },

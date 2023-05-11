@@ -15,6 +15,7 @@ Formatting goes as follows:
 {untilintlimit} - the amount of spaces until you reach the integer limit
 ```
 ## Installing
+Warning: Most files here haven't been made yet. Wait until next commit or something.
 ### macOS
 Download the latest [build][rel] of the game and run the `.app` file.
 ### Windows
