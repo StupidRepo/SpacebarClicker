@@ -1,0 +1,79 @@
+[
+    {
+        "clicks": 0,
+        "text": "Press Spacebar to start!"
+    },
+    {
+        "clicks": 1,
+        "text": "Wooooooooow... {clicks} {space}. WOOOOOOOOOW! You're SOOOOOOO good..."
+    },
+    {
+        "clicks": 10,
+        "text": "Alright then."
+    },
+    {
+        "clicks": 50,
+        "text": "Get a bigger Spacebar, you're gonna break your current one!"
+    },
+    {
+        "clicks": 100,
+        "text": "You can't beat me!"
+    },
+    {
+        "clicks": 500,
+        "text": "Slow down a little, you're scaring me."
+    },
+    {
+        "clicks": 1000,
+        "text": "Woah, okay. Calm down!"
+    },
+    {
+        "clicks": 10000,
+        "text": "You're too good!"
+    },
+    {
+        "clicks": 50000,
+        "text": "Unfortunately, spacebar.exe has stopped working. Please try again later."
+    },
+    {
+        "clicks": 100000,
+        "text": "Stop. Please. I'm begging you."
+    },
+    {
+        "clicks": 500000,
+        "text": "I'm not joking. Stop."
+    },
+    {
+        "clicks": 1000000,
+        "text": "STOP, GOD DAMN IT! I PUT SO MUCH EFFORT INTO THIS GAME, AND YOU'RE RUINING IT!"
+    },
+    {
+        "clicks": 5000000,
+        "text": "BUFFER OVERFLOW BUFFER OVERFLOW BUFFER OVERFLOW BUFFER OVERFLOW BUFFER OVERFLOW BUFFER OVERFLOW BUFFER OVERFLOW BUFFER OVERFLOW BUFFER OVERFLOW BUFFER OVERFLOW BUFFER OVERFLOW BUFFER OVERFLOW BUFFER OVERFLOW BUFFER OVERFLOW BUFFER OVERFLOW BUFFER OVERFLOW BUFFER OVERFLOW BUFFER OVERFLOW BUFFER OVERFLOW BUFFER OVERFLOW BUFFER OVERFLOW BUFFER OVERFLOW BUFFER OVERFLOW BUFFER OVERFLOW BUFFER OVERFLOW BUFFER OVERFLOW BUFFER OVERFLOW BUFFER OVERFLOW"
+    },
+    {
+        "clicks": 1000000000,
+        "text": "What? How'd you get here? You're cheating, aren't you? Well, I'm not gonna let you win! I'm gonna make this game impossible for you!",
+        "impossible": true
+    },
+    {
+        "clicks": 2147483640,
+        "text": "A few more spaces to go before you reach the 32-bit integer limit."
+    },
+    {
+        "clicks": 2147483647,
+        "text": "OK, the game *should* now crash... right?"
+    },
+    {
+        "clicks": 2147483648,
+        "text": "Fine then. I didn't even know Python could go over the 32-bit integer limit. Congratulations! You haven't beat the game yet."
+    },
+    {
+        "clicks": 2147483652,
+        "text": "You have {untilintlimit} {space} left until the game starts to break."
+    },
+    {
+        "clicks": 2147483950,
+        "text": "{intlimit} is your integer limit. You have {untilintlimit} {space} left."
+    }
+]
