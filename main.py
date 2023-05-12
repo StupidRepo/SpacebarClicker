@@ -17,7 +17,7 @@ except FileNotFoundError:
     version = "Unknown"
 baseLocation = user_data_dir("Spacebar Clicker", "Bradlee Barnes")
 saveLocation = f"{baseLocation}/saveFile.json"
-descriptionsLocation = "core/descriptions.json"
+descriptionsLocation = "assets/core/descriptions.json"
 
 if not os.path.exists(baseLocation):
     os.makedirs(baseLocation)
@@ -101,13 +101,20 @@ running = True
 
 loadSavedGame()
 
-titleFont = 'fonts/title.ttf'
+titleFont = 'assets/fonts/title.ttf'
 
 descriptionText = makeText(getDescriptionText(), (255, 255, 255), pygame.font.Font(titleFont, textSizeDescription))
 
 pygame.display.set_caption("Spacebar Clicker: %s (%s space%s)" % (version, clicks, '' if clicks == 1 else 's'))
 
-spaceSFX = pygame.mixer.Sound("audio/gain.wav")
+spaceSFX = pygame.mixer.Sound("assets/audio/gain.wav")
+
+def bleep():
+    pitch_shift = random.uniform(0.5, 2)  # Random pitch shift between 0.5 and 2
+    spaceSFX.set_volume(1)
+    spaceSFX.set_volume(1 * pitch_shift)  # Modify the frequency to change the pitch
+    spaceSFX.play()
+
 
 while running:
     screen.fill((0, 0, 0))
@@ -130,10 +137,10 @@ while running:
                     if random.random() < chanceToClick:
                         chanceToClick += 0.005
                         clicks += cpc
-                        spaceSFX.play()
+                        bleep()
                 else:
                     clicks += cpc
-                    spaceSFX.play()
+                    bleep()
                 pygame.display.set_caption("Spacebar Clicker: %s (%s space%s)" % (version, clicks, '' if clicks == 1 else 's'))
                 descriptionText = makeText(getDescriptionText(), (255, 255, 255), pygame.font.Font(titleFont, textSizeDescription))
 
