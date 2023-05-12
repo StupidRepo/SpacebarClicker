@@ -4,6 +4,7 @@ import random
 import sys
 from appdirs import user_data_dir
 import os
+import numpy as np
 
 abspath = os.path.abspath(__file__)
 dname = os.path.dirname(abspath)
@@ -40,6 +41,15 @@ chanceToClick = 0.1
 textSizeClicks = 52
 textSizeDescription = 17
 textSizeCPC = 15
+
+class Icon(pygame.sprite.Sprite):
+    def __init__(self, image):
+        super().__init__()
+        self.image = pygame.image.load(image)
+        self.rect = self.image.get_rect()
+
+    def draw(self, screenLol):
+        screenLol.blit(self.image, self.rect)
 
 try:
     with open(descriptionsLocation, "r") as descriptionsFile:
@@ -107,17 +117,16 @@ descriptionText = makeText(getDescriptionText(), (255, 255, 255), pygame.font.Fo
 
 pygame.display.set_caption("Spacebar Clicker: %s (%s space%s)" % (version, clicks, '' if clicks == 1 else 's'))
 
-spaceSFX = pygame.mixer.Sound("assets/audio/gain.wav")
+clickSfxs = [pygame.mixer.Sound("assets/audio/gain1.wav"), pygame.mixer.Sound("assets/audio/gain2.wav"), pygame.mixer.Sound("assets/audio/gain3.wav"), pygame.mixer.Sound("assets/audio/gain4.wav"), pygame.mixer.Sound("assets/audio/gain5.wav")]
+
+muted = False
 
 def bleep():
-    pitch_shift = random.uniform(0.5, 2)  # Random pitch shift between 0.5 and 2
-    spaceSFX.set_volume(1)
-    spaceSFX.set_volume(1 * pitch_shift)  # Modify the frequency to change the pitch
-    spaceSFX.play()
-
+    if not muted:
+        random.choice(clickSfxs).play()
 
 while running:
-    screen.fill((0, 0, 0))
+    screen.fill((100, 100, 100))
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             print("Saving game...")
@@ -131,6 +140,9 @@ while running:
                 print("Game reset. Crashing!")
                 running = False
                 exec(type((lambda: 0).__code__)(0, 1, 0, 0, 0, b'', (), (), (), '', '', 1, b''))
+
+            if event.key == pygame.K_m:
+                muted = not muted
 
             if event.key == pygame.K_SPACE:
                 if impossible:
@@ -149,9 +161,11 @@ while running:
 
     spaceText = makeText(f"{clicks} space{'' if clicks == 1 else 's'}", (255, 255, 255), pygame.font.Font(titleFont, textSizeClicks))
 
-    screen.blit(spaceText, ((screen_width - spaceText.get_width()) // 2, textSizeClicks // 2))
-    screen.blit(descriptionText, ((screen_width - descriptionText.get_width()) // 2, (textSizeDescription + textSizeClicks) + (textSizeClicks // 4) + 4))
-    screen.blit(cpcText, ((screen_width - cpcText.get_width()) // 2, (textSizeDescription + textSizeClicks) + (textSizeClicks // 4) + 4 + textSizeDescription + 4))
+    Icon("assets/textures/mute.png" if muted else "assets/textures/unmute.png").draw(screen)
+
+    screen.blit(spaceText, ((screen_width - spaceText.get_width()) // 2, 0))
+    screen.blit(descriptionText, ((screen_width - descriptionText.get_width()) // 2, (textSizeDescription + textSizeClicks) + (textSizeClicks // 4) - textSizeClicks // 4))
+    screen.blit(cpcText, ((screen_width - cpcText.get_width()) // 2, (textSizeDescription + textSizeClicks) + (textSizeClicks // 4) + 4 + textSizeDescription - textSizeClicks // 4))
     pygame.display.update()
 
 # Clean up
