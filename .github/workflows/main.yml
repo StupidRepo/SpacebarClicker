@@ -11,6 +11,10 @@ jobs:
       - run: python -m pip install pygame appdirs pyinstaller
       - run: python buildWin.py
       - run: tar.exe -a -c -f SpacebarClicker-Windows.zip dist/
+      - uses: actions/upload-artifact@v3
+        with:
+          name: SpacebarClicker-Windows.zip
+          path: SpacebarClicker-Windows.zip
       - run: ls build/
       - run: ls
 
@@ -21,12 +25,12 @@ jobs:
       - uses: actions/setup-python@v4
         with:
           python-version: '3.11'
+      - run: python -m pip install pygame appdirs pyinstaller
+      - run: python build.py
+      - run: zip -r SpacebarClicker-Linux.zip dist/
       - uses: actions/upload-artifact@v3
         with:
           name: SpacebarClicker-Linux.zip
           path: SpacebarClicker-Linux.zip
-      - run: python -m pip install pygame appdirs pyinstaller
-      - run: python build.py
-      - run: zip -r SpacebarClicker-Linux.zip dist/
       - run: ls build/
       - run: ls
