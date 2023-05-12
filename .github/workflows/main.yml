@@ -10,7 +10,7 @@ jobs:
           python-version: '3.11'
       - run: python -m pip install pygame appdirs pyinstaller
       - run: python buildWin.py
-      - run: tar.exe -a -c -f SpacebarClicker-Windows.zip dist/
+      - run: powershell Compress-Archive dist/ SpacebarClicker-Windows.zip
       - uses: actions/upload-artifact@v3
         with:
           name: SpacebarClicker-Windows.zip
