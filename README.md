@@ -15,25 +15,19 @@ Formatting goes as follows:
 {untilintlimit} - the amount of spaces until you reach the integer limit
 ```
 ## Installing
-Warning: Most files here haven't been made yet. Wait until next commit or something.
-### macOS
-Download the latest [build][rel] of the game and run the `.app` file.
-### Windows
-Download the [source code][source], extract it, and run the `run_windows.bat` file.
-You will need Python 3 installed on your computer to run the game.
-### Linux
-Same as Windows, but run `run_linux.sh` instead.
-Just like Windows, you will need Python 3 installed on your computer to run the game.
+### macOS + Windows + Linux
+Go to the [releases page][rel] and download the latest release that corresponds to your OS. Extract the zip file and run the executable file.
+Executable file is `SpacebarClicker.app` on macOS, `SpacebarClicker` (the file without the file extentsion) on Linux, and `SpacebarClicker.exe` on Windows.
 ## Building
 ### macOS
-Download the [source code](https://github.com/StupidRepo/SpacebarClicker/archive/refs/heads/main.zip), extract it, and run the `build_macos.sh` file.
-You will need Python 3 installed on your computer to build the game.
+Download the [source code](https://github.com/StupidRepo/SpacebarClicker/archive/refs/heads/main.zip), extract it, and run `python3 build.py` in `Terminal.app`.
 ### Windows
-Same as macOS, but run `build_windows.bat` instead.
+Same as macOS, but run `python3 buildWin.py` instead.
 ### Linux
-Same as Windows, but run `build_linux.sh` instead.
+Same as macOS.
 ## Contributing
-I recommend you contribute to the game, as it's made in Python and the code is pretty simple. You can contribute by making forking the repository, making your changes and then making a pull request.
+I will greatly appreciate it if you contribute to the game.
+You can contribute by making forking the repository, making your changes and then making a pull request.
 ## Credits/Contributors
 - Bradlee Barnes ([StupidRepo][bb-sr])
 ## License
