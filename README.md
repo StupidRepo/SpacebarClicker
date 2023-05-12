@@ -29,7 +29,7 @@ Latest stable build:
 - [Linux][lins]
 - [All][alls]
 
-Latest unstable builds:
+Latest unstable build:
 - [macOS][macu]
 - [Windows][winu]
 - [Linux][linu]
