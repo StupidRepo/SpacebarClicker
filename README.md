@@ -25,6 +25,8 @@ An example would be:
 ### macOS + Windows + Linux
 Go to the [releases page][rel] and download the latest release that corresponds to your OS. Extract the zip file and run the executable file.
 
+Alternatively, you could download the unstable builds produced for [macOS][mac], [Linux][lin] and [Windows][win].
+
 Executable file is:
 - `SpacebarClicker.app` on macOS
 - `SpacebarClicker` (the file without the file extentsion) on Linux
@@ -47,5 +49,8 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE.md) fi
 [py]: https://www.python.org/
 [pg]: https://www.pygame.org/
 [source]: https://github.com/StupidRepo/SpacebarClicker/archive/refs/heads/main.zip
+[mac]: https://nightly.link/StupidRepo/SpacebarClicker/workflows/main/main/SpacebarClicker-macOS.zip
+[win]: https://nightly.link/StupidRepo/SpacebarClicker/workflows/main/main/SpacebarClicker-Windows.zip
+[lin]: https://nightly.link/StupidRepo/SpacebarClicker/workflows/main/main/SpacebarClicker-Linux.zip
 [rel]: https://github.com/StupidRepo/SpacebarClicker/releases/latest
 [bb-sr]: https://github.com/StupidRepo/
