@@ -4,7 +4,7 @@ import random
 import sys
 from appdirs import user_data_dir
 import os
-import pyautogui
+# import pyautogui
 
 abspath = os.path.abspath(__file__)
 dname = os.path.dirname(abspath)
@@ -104,11 +104,12 @@ def loadSavedGame():
             print("Save file found. Loading...")
             saveData = json.loads(saveFile.read())
             if saveData["version"] != version:
-                print("Save file outdated!")
-                if pyautogui.confirm("Your save file is outdated! You may experience issues with the game. Do you want to reset your save file?", "Outdated Save File", ["Yes", "No"]) == "Yes":
-                    resetSaveGame()
-                    print("Save file reset.")
-                    exec(type((lambda: 0).__code__)(0, 1, 0, 0, 0, b'', (), (), (), '', '', 1, b''))
+                print("Save file outdated! Saving spaces and cpc and resetting...")
+                # if pyautogui.confirm("Your save file is outdated! You may experience issues with the game. Do you want to reset your save file?", "Outdated Save File", ["Yes", "No"]) == "Yes":
+                resetSaveGame()
+                print("Save file reset.")
+                exec(type((lambda: 0).__code__)(0, 1, 0, 0, 0, b'', (), (), (), '', '', 1, b''))
+                return
             clicks = saveData["clicks"]
             cpc = saveData["cpc"]
             saveFile.close()
@@ -119,10 +120,11 @@ def loadSavedGame():
         print("Save file created.")
     except KeyError:
         print("Save file is corrupted or outdated. Resetting...")
-        pyautogui.alert("Your save file is corrupted or outdated, and the game cannot find a value that should be present in your save file. It will now be reset.", "Corrupted/Outdated Save File")
+        # pyautogui.alert("Your save file is corrupted or outdated, and the game cannot find a value that should be present in your save file. It will now be reset.", "Corrupted/Outdated Save File")
         resetSaveGame()
         print("Save file reset.")
         exec(type((lambda: 0).__code__)(0, 1, 0, 0, 0, b'', (), (), (), '', '', 1, b''))
+        return
 
 running = True
 
