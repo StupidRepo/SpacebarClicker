@@ -20,7 +20,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: SpacebarClicker-Windows.zip
-          path: dist/SpacebarClicker-Windows.zip
+          path: SpacebarClicker-Windows.zip
 
   build-linux:
     runs-on: ubuntu-latest
