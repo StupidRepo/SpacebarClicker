@@ -19,7 +19,7 @@ jobs:
 #      - name: ...and upload!
       - uses: actions/upload-artifact@v3
         with:
-          name: SpacebarClicker-Windows
+          name: Windows
           path: dist/*
 
   build-linux:
@@ -40,7 +40,7 @@ jobs:
 #      - name: ...and upload!
       - uses: actions/upload-artifact@v3
         with:
-          name: SpacebarClicker-Linux
+          name: Linux
           path: dist/*
 
   build-macOS:
@@ -61,5 +61,5 @@ jobs:
       #      - name: ...and upload!
       - uses: actions/upload-artifact@v3
         with:
-          name: SpacebarClicker-macOS
-          path: dist/*
+          name: macOS
+          path: dist/SpacebarClicker.app
