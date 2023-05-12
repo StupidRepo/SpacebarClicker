@@ -25,7 +25,11 @@ An example would be:
 ### macOS + Windows + Linux
 Go to the [releases page][rel] and download the latest release that corresponds to your OS. Extract the zip file and run the executable file.
 
-Alternatively, you could download the unstable builds produced for [macOS][mac], [Linux][lin] and [Windows][win].
+Alternatively, you could download the unstable builds which are made from the latest commit for:
+- [macOS][mac]
+- [Linux][lin]
+and
+- [Windows][win]
 
 Executable file is:
 - `SpacebarClicker.app` on macOS
