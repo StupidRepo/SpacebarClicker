@@ -36,12 +36,12 @@ jobs:
 #      - name: Build for Linux
       - run: python build.py
 #      - name: Compress ZIP...
-      - run: cd dist && zip -r SpacebarClicker-Linux.zip *
+#      - run: cd dist && zip -r SpacebarClicker-Linux.zip *
 #      - name: ...and upload!
       - uses: actions/upload-artifact@v3
         with:
           name: SpacebarClicker-Linux.zip
-          path: dist/SpacebarClicker-Linux.zip
+          path: dist/*
 
   build-macOS:
     runs-on: macos-11
@@ -57,9 +57,9 @@ jobs:
       #      - name: Build for Linux
       - run: python build.py
       #      - name: Compress ZIP...
-      - run: cd dist && zip -r SpacebarClicker-macOS.zip *
+#      - run: cd dist && zip -r SpacebarClicker-macOS.zip *
       #      - name: ...and upload!
       - uses: actions/upload-artifact@v3
         with:
           name: SpacebarClicker-macOS.zip
-          path: dist/SpacebarClicker-macOS.zip
+          path: dist/*
