@@ -28,7 +28,6 @@ Go to the [releases page][rel] and download the latest release that corresponds 
 Alternatively, you could download the unstable builds which are made from the latest commit for:
 - [macOS][mac]
 - [Linux][lin]
-and
 - [Windows][win]
 
 Executable file is:
