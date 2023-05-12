@@ -114,6 +114,7 @@ def loadSavedGame():
         print("Save file created.")
     except KeyError:
         print("Save file is corrupted or outdated. Resetting...")
+        pyautogui.alert("Your save file is corrupted or outdated, and the game cannot find a value that should be present in your save file. It will now be reset.", "Corrupted/Outdated Save File")
         resetSaveGame()
         print("Save file reset.")
         exec(type((lambda: 0).__code__)(0, 1, 0, 0, 0, b'', (), (), (), '', '', 1, b''))
