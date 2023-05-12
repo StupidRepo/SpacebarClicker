@@ -4,6 +4,7 @@ import random
 import sys
 from appdirs import user_data_dir
 import os
+import pyautogui
 
 abspath = os.path.abspath(__file__)
 dname = os.path.dirname(abspath)
@@ -80,12 +81,15 @@ def getDescriptionText():
 def makeText(text, color, font):
     return font.render(text, True, color)
 
+dataToSave = """{
+    "clicks": %s,
+    "cpc": %s,
+    "version": "%s"
+}"""
+
 def saveGame():
     with open(saveLocation, "w") as saveFile:
-        saveFile.write("""{
-    "clicks": %s,
-    "cpc": %s
-}""" % (clicks, cpc))
+        saveFile.write(dataToSave % (clicks, cpc, version))
         saveFile.close()
 
 def resetSaveGame():
@@ -97,6 +101,9 @@ def loadSavedGame():
         with open(saveLocation, "r") as saveFile:
             print("Save file found. Loading...")
             saveData = json.loads(saveFile.read())
+            if saveData["version"] != version:
+                print("Save file outdated!")
+                pyautogui.confirm("Your save file is outdated! You may experience issues with the game. Do you want to reset your save file?", "Outdated Save File", ["Yes", "No"])
             clicks = saveData["clicks"]
             cpc = saveData["cpc"]
             saveFile.close()

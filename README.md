@@ -27,8 +27,10 @@ Go to the [releases page][rel] and download the latest release that corresponds 
 
 Alternatively, you could download the unstable builds which are made from the latest commit for:
 - [macOS][mac]
-- [Linux][lin]
 - [Windows][win]
+- [Linux][lin]
+
+(In case you missed it, these builds are not guaranteed to work, and may be unstable. It could also delete your save file. Use at your own risk.)
 
 The executable is `SpacebarClicker.app` for macOS, `SpacebarClicker` (the file without the file extentsion) for Linux or `SpacebarClicker.exe` for Windows.
 ## Building
@@ -36,8 +38,8 @@ The executable is `SpacebarClicker.app` for macOS, `SpacebarClicker` (the file w
 Download the [source code](https://github.com/StupidRepo/SpacebarClicker/archive/refs/heads/main.zip), extract it, and run:
 - `python3 -m pip install -r requirements.txt` if you're on any OS.
 After that, run:
-- `python3 build.py` if you're on macOS or GNU/Linux.
 - `python3 buildWin.py` if you're on Windows.
+- `python3 build.py` if you're on macOS or GNU/Linux.
 ## Contributing
 I will greatly appreciate it if you contribute to the game.
 You can contribute by making forking the repository, making your changes and then making a pull request.
