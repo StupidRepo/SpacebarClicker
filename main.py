@@ -177,7 +177,7 @@ while running:
                 resizeable = not resizeable
                 screen = pygame.display.set_mode((screen.get_width(), screen.get_height()), flags=(pygame.RESIZABLE if resizeable else 0))
 
-            if event.key == pygame.K_SPACE:
+            if event.key == pygame.K_SPACE or event.key == pygame.K_RETURN or event.key == pygame.K_BACKSPACE:
                 if impossible:
                     if random.random() < chanceToClick:
                         chanceToClick += 0.005

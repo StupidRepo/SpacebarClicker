@@ -21,6 +21,14 @@ An example would be:
   "text": "You have {clicks} {space}, and this message will show at 420+ spaces!"
 }
 ```
+## Keybinds
+```
+Spacebar/Space/Return/Backspace - Click
+M - Mute audio
+C - Reset window size
+F - Toggle resizeability
+X - Reset save file
+```
 ## Installing
 ### macOS + Windows + Linux
 Latest stable build:
