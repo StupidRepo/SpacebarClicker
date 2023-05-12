@@ -15,7 +15,7 @@ jobs:
 #      - name: Build for Windows
       - run: python buildWin.py
 #      - name: Compress ZIP...
-      - run: powershell Compress-Archive dist/* SpacebarClicker-Windows.zip
+#      - run: powershell Compress-Archive dist/* SpacebarClicker-Windows.zip
 #      - name: ...and upload!
       - uses: actions/upload-artifact@v3
         with:
