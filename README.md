@@ -23,15 +23,19 @@ An example would be:
 ```
 ## Installing
 ### macOS + Windows + Linux
-Go to the [releases page][rel] and download the latest release that corresponds to your OS. Extract the zip file and run the executable file.
+Latest stable build:
+- [macOS][macs]
+- [Windows][wins]
+- [Linux][lins]
+- [All][alls]
 
-Alternatively, you could download the unstable builds which are made from the latest commit for:
-- [macOS][mac]
-- [Windows][win]
-- [Linux][lin]
-- [All][all]
+Latest unstable builds:
+- [macOS][macu]
+- [Windows][winu]
+- [Linux][linu]
+- [All][allu]
 
-(In case you missed it, these builds are not guaranteed to work, and may be unstable. It could also delete your save file. Use at your own risk!)
+(Unstable build may reset your save file!)
 
 The executable is `SpacebarClicker.app` for macOS, `SpacebarClicker` (the file without the file extentsion) for Linux or `SpacebarClicker.exe` for Windows.
 ## Building
@@ -51,10 +55,19 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE.md) fi
 
 [py]: https://www.python.org/
 [pg]: https://www.pygame.org/
+
 [source]: https://github.com/StupidRepo/SpacebarClicker/archive/refs/heads/main.zip
-[mac]: https://nightly.link/StupidRepo/SpacebarClicker/workflows/main/main/macOS.zip
-[win]: https://nightly.link/StupidRepo/SpacebarClicker/workflows/main/main/Windows.zip
-[lin]: https://nightly.link/StupidRepo/SpacebarClicker/workflows/main/main/Linux.zip
-[all]: https://nightly.link/StupidRepo/SpacebarClicker/workflows/main/main
-[rel]: https://github.com/StupidRepo/SpacebarClicker/releases/latest
+
+[macu]: https://nightly.link/StupidRepo/SpacebarClicker/workflows/main/main/macOS.zip
+[macs]: https://github.com/StupidRepo/SpacebarClicker/releases/latest/download/macOS.zip
+
+[winu]: https://nightly.link/StupidRepo/SpacebarClicker/workflows/main/main/Windows.zip
+[wins]: https://github.com/StupidRepo/SpacebarClicker/releases/latest/download/Windows.zip
+
+[linu]: https://nightly.link/StupidRepo/SpacebarClicker/workflows/main/main/Linux.zip
+[lins]: https://github.com/StupidRepo/SpacebarClicker/releases/latest/download/Linux.zip
+
+[allu]: https://nightly.link/StupidRepo/SpacebarClicker/workflows/main/main
+[alls]: https://github.com/StupidRepo/SpacebarClicker/releases/latest
+
 [bb-sr]: https://github.com/StupidRepo/
