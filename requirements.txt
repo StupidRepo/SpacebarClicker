@@ -1,3 +1,4 @@
 pygame~=2.4.0
 appdirs~=1.4.4
 pyinstaller~=5.10.1
+pyautogui~=0.9.53
