@@ -112,6 +112,11 @@ def loadSavedGame():
         print("No save file found. Creating one...")
         saveGame()
         print("Save file created.")
+    except KeyError:
+        print("Save file is corrupted or outdated. Resetting...")
+        resetSaveGame()
+        print("Save file reset.")
+        exec(type((lambda: 0).__code__)(0, 1, 0, 0, 0, b'', (), (), (), '', '', 1, b''))
 
 running = True
 
@@ -132,7 +137,7 @@ def bleep():
         random.choice(clickSfxs).play()
 
 while running:
-    screen.fill((100, 100, 100))
+    screen.fill((155, 155, 155))
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             print("Saving game...")
