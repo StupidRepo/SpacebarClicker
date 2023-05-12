@@ -189,7 +189,7 @@ while running:
                 pygame.display.set_caption("Spacebar Clicker: %s (%s space%s)" % (version, clicks, '' if clicks == 1 else 's'))
                 descriptionText = makeText(getDescriptionText(), (255, 255, 255), descFontClass)
 
-    cpcText = makeText(f"{cpc} spaces per click{f' (with a {chanceToClick * 100}% chance of a successful click)' if impossible else ''}", (255, 255, 255), cpcFontClass)
+    cpcText = makeText(f"{cpc} spaces per click{f' (with a {round(chanceToClick * 100)}% chance of a successful click)' if impossible else ''}", (255, 255, 255), cpcFontClass)
 
     spaceText = makeText(f"{clicks} space{'' if clicks == 1 else 's'}", (255, 255, 255), spaceFontClass)
 
