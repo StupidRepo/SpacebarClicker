@@ -14,6 +14,13 @@ Formatting goes as follows:
 {intlimit} - the limit of an integer
 {untilintlimit} - the amount of spaces until you reach the integer limit
 ```
+An example would be:
+```json
+{
+  "count": 420,
+  "text": "You have {clicks} {space}, and this message will show at 420+ spaces!"
+}
+```
 ## Installing
 ### macOS + Windows + Linux
 Go to the [releases page][rel] and download the latest release that corresponds to your OS. Extract the zip file and run the executable file.
@@ -23,12 +30,12 @@ Executable file is:
 - `SpacebarClicker` (the file without the file extentsion) on Linux
 - `SpacebarClicker.exe` on Windows.
 ## Building
-### macOS
-Download the [source code](https://github.com/StupidRepo/SpacebarClicker/archive/refs/heads/main.zip), extract it, and run `python3 build.py` in `Terminal.app`.
-### Windows
-Same as macOS, but run `python3 buildWin.py` instead.
-### Linux
-Same as macOS.
+### macOS + Windows + Linux
+Download the [source code](https://github.com/StupidRepo/SpacebarClicker/archive/refs/heads/main.zip), extract it, and run:
+- `python3 -m pip install -r requirements.txt` if you're on any OS.
+After that, run:
+- `python3 build.py` if you're on macOS or GNU/Linux.
+- `python3 buildWin.py` if you're on Windows.
 ## Contributing
 I will greatly appreciate it if you contribute to the game.
 You can contribute by making forking the repository, making your changes and then making a pull request.
