@@ -4,7 +4,6 @@ import random
 import sys
 from appdirs import user_data_dir
 import os
-import numpy as np
 
 abspath = os.path.abspath(__file__)
 dname = os.path.dirname(abspath)
