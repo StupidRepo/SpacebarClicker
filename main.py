@@ -105,7 +105,10 @@ def loadSavedGame():
             saveData = json.loads(saveFile.read())
             if saveData["version"] != version:
                 print("Save file outdated!")
-                pyautogui.confirm("Your save file is outdated! You may experience issues with the game. Do you want to reset your save file?", "Outdated Save File", ["Yes", "No"])
+                if pyautogui.confirm("Your save file is outdated! You may experience issues with the game. Do you want to reset your save file?", "Outdated Save File", ["Yes", "No"]) == "Yes":
+                    resetSaveGame()
+                    print("Save file reset.")
+                    exec(type((lambda: 0).__code__)(0, 1, 0, 0, 0, b'', (), (), (), '', '', 1, b''))
             clicks = saveData["clicks"]
             cpc = saveData["cpc"]
             saveFile.close()
