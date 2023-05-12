@@ -26,7 +26,8 @@ if not os.path.exists(baseLocation):
 # Initialize pygame
 pygame.init()
 
-scale = 1.35
+scale = 1.4
+resizeable = False
 
 # Create the window
 screen_width, screen_height = round(1512/scale), round(1028/scale)
@@ -41,8 +42,8 @@ impossible = False
 chanceToClick = 0.1
 
 textSizeClicks = 52
-textSizeDescription = 17
-textSizeCPC = 15
+textSizeDescription = 19
+textSizeCPC = 19
 
 class Icon(pygame.sprite.Sprite):
     def __init__(self, image):
@@ -81,7 +82,7 @@ def getDescriptionText():
     return descriptionString
 
 def makeText(text, color, font):
-    return font.render(text, True, color)
+    return font.render(text, False, color)
 
 dataToSave = """{
     "clicks": %s,
@@ -147,6 +148,10 @@ def bleep():
     if not muted:
         random.choice(clickSfxs).play()
 
+descFontClass = pygame.font.Font(titleFont, textSizeDescription)
+cpcFontClass = pygame.font.Font(titleFont, textSizeCPC)
+spaceFontClass = pygame.font.Font(titleFont, textSizeClicks)
+
 while running:
     screen.fill((155, 155, 155))
     for event in pygame.event.get():
@@ -165,6 +170,13 @@ while running:
             if event.key == pygame.K_m:
                 muted = not muted
 
+            if event.key == pygame.K_c:
+                screen = pygame.display.set_mode((screen_width, screen_height), flags=(pygame.RESIZABLE if resizeable else 0))
+
+            if event.key == pygame.K_f:
+                resizeable = not resizeable
+                screen = pygame.display.set_mode((screen.get_width(), screen.get_height()), flags=(pygame.RESIZABLE if resizeable else 0))
+
             if event.key == pygame.K_SPACE:
                 if impossible:
                     if random.random() < chanceToClick:
@@ -175,18 +187,17 @@ while running:
                     clicks += cpc
                     bleep()
                 pygame.display.set_caption("Spacebar Clicker: %s (%s space%s)" % (version, clicks, '' if clicks == 1 else 's'))
-                descriptionText = makeText(getDescriptionText(), (255, 255, 255), pygame.font.Font(titleFont, textSizeDescription))
+                descriptionText = makeText(getDescriptionText(), (255, 255, 255), descFontClass)
 
-    cpcText = makeText(f"{cpc} spaces per click{f' (with a {chanceToClick * 100}% chance of a successful click)' if impossible else ''}", (255, 255, 255),
-                               pygame.font.Font(titleFont, textSizeCPC))
+    cpcText = makeText(f"{cpc} spaces per click{f' (with a {chanceToClick * 100}% chance of a successful click)' if impossible else ''}", (255, 255, 255), cpcFontClass)
 
-    spaceText = makeText(f"{clicks} space{'' if clicks == 1 else 's'}", (255, 255, 255), pygame.font.Font(titleFont, textSizeClicks))
+    spaceText = makeText(f"{clicks} space{'' if clicks == 1 else 's'}", (255, 255, 255), spaceFontClass)
 
     Icon("assets/textures/mute.png" if muted else "assets/textures/unmute.png").draw(screen)
 
-    screen.blit(spaceText, ((screen_width - spaceText.get_width()) // 2, 0))
-    screen.blit(descriptionText, ((screen_width - descriptionText.get_width()) // 2, (textSizeDescription + textSizeClicks) + (textSizeClicks // 4) - textSizeClicks // 4))
-    screen.blit(cpcText, ((screen_width - cpcText.get_width()) // 2, (textSizeDescription + textSizeClicks) + (textSizeClicks // 4) + 4 + textSizeDescription - textSizeClicks // 4))
+    screen.blit(spaceText, ((screen.get_width() - spaceText.get_width()) // 2, 0))
+    screen.blit(descriptionText, ((screen.get_width() - descriptionText.get_width()) // 2, (textSizeDescription + textSizeClicks) + (textSizeClicks // 4) + 4 + textSizeDescription - textSizeClicks - textSizeClicks // 8))
+    screen.blit(cpcText, ((screen.get_width() - cpcText.get_width()) // 2, (textSizeDescription + textSizeClicks) + (textSizeClicks // 4) + 4 + textSizeDescription - textSizeClicks // 1.75))
     pygame.display.update()
 
 # Clean up

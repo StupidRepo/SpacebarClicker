@@ -26,21 +26,21 @@ An example would be:
 Latest stable build:
 - [macOS][macs]
 - [Windows][wins]
-- [Linux][lins]
+- [GNU/Linux][lins]
 - [All][alls]
 
 Latest unstable build:
 - [macOS][macu]
 - [Windows][winu]
-- [Linux][linu]
+- [GNU/Linux][linu]
 - [All][allu]
 
 (Unstable build may reset your save file!)
 
-The executable is `SpacebarClicker.app` for macOS, `SpacebarClicker` (the file without the file extentsion) for Linux or `SpacebarClicker.exe` for Windows.
+The executable is `SpacebarClicker.app` for macOS, `SpacebarClicker` (the file without the file extentsion) for GNU/Linux or `SpacebarClicker.exe` for Windows.
 ## Building
 ### macOS + Windows + Linux
-Download the [source code](https://github.com/StupidRepo/SpacebarClicker/archive/refs/heads/main.zip), extract it, and run:
+`git clone` the repository, then run:
 - `python3 -m pip install -r requirements.txt` if you're on any OS.
 After that, run:
 - `python3 buildWin.py` if you're on Windows.
@@ -55,8 +55,6 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE.md) fi
 
 [py]: https://www.python.org/
 [pg]: https://www.pygame.org/
-
-[source]: https://github.com/StupidRepo/SpacebarClicker/archive/refs/heads/main.zip
 
 [macu]: https://nightly.link/StupidRepo/SpacebarClicker/workflows/main/main/macOS.zip
 [macs]: https://github.com/StupidRepo/SpacebarClicker/releases/latest/download/macOS.zip
