@@ -17,7 +17,11 @@ Formatting goes as follows:
 ## Installing
 ### macOS + Windows + Linux
 Go to the [releases page][rel] and download the latest release that corresponds to your OS. Extract the zip file and run the executable file.
-Executable file is `SpacebarClicker.app` on macOS, `SpacebarClicker` (the file without the file extentsion) on Linux, and `SpacebarClicker.exe` on Windows.
+
+Executable file is:
+- `SpacebarClicker.app` on macOS
+- `SpacebarClicker` (the file without the file extentsion) on Linux
+- `SpacebarClicker.exe` on Windows.
 ## Building
 ### macOS
 Download the [source code](https://github.com/StupidRepo/SpacebarClicker/archive/refs/heads/main.zip), extract it, and run `python3 build.py` in `Terminal.app`.
