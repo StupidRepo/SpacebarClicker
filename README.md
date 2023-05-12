@@ -30,10 +30,7 @@ Alternatively, you could download the unstable builds which are made from the la
 - [Linux][lin]
 - [Windows][win]
 
-Executable file is:
-- `SpacebarClicker.app` on macOS
-- `SpacebarClicker` (the file without the file extentsion) on Linux
-- `SpacebarClicker.exe` on Windows.
+The executable is `SpacebarClicker.app` for macOS, `SpacebarClicker` (the file without the file extentsion) for Linux or `SpacebarClicker.exe` for Windows.
 ## Building
 ### macOS + Windows + Linux
 Download the [source code](https://github.com/StupidRepo/SpacebarClicker/archive/refs/heads/main.zip), extract it, and run:
