@@ -5,6 +5,10 @@ import sys
 from appdirs import user_data_dir
 import os
 
+abspath = os.path.abspath(__file__)
+dname = os.path.dirname(abspath)
+os.chdir(dname)
+
 try:
     with open("version.txt", "r") as versionFile:
         version = versionFile.read()
@@ -13,7 +17,7 @@ except FileNotFoundError:
     version = "Unknown"
 baseLocation = user_data_dir("Spacebar Clicker", "Bradlee Barnes")
 saveLocation = f"{baseLocation}/saveFile.json"
-descriptionsLocation = "assets/core/descriptions.json"
+descriptionsLocation = "core/descriptions.json"
 
 if not os.path.exists(baseLocation):
     os.makedirs(baseLocation)
@@ -97,7 +101,7 @@ running = True
 
 loadSavedGame()
 
-titleFont = 'assets/fonts/title.ttf'
+titleFont = 'fonts/title.ttf'
 
 descriptionText = makeText(getDescriptionText(), (255, 255, 255), pygame.font.Font(titleFont, textSizeDescription))
 
@@ -124,6 +128,7 @@ while running:
                     if random.random() < chanceToClick:
                         chanceToClick += 0.005
                         clicks += cpc
+
                 else:
                     clicks += cpc
                 pygame.display.set_caption("Spacebar Clicker: %s (%s space%s)" % (version, clicks, '' if clicks == 1 else 's'))
