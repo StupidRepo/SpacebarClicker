@@ -107,6 +107,8 @@ descriptionText = makeText(getDescriptionText(), (255, 255, 255), pygame.font.Fo
 
 pygame.display.set_caption("Spacebar Clicker: %s (%s space%s)" % (version, clicks, '' if clicks == 1 else 's'))
 
+spaceSFX = pygame.mixer.Sound("audio/gain.wav")
+
 while running:
     screen.fill((0, 0, 0))
     for event in pygame.event.get():
@@ -128,9 +130,10 @@ while running:
                     if random.random() < chanceToClick:
                         chanceToClick += 0.005
                         clicks += cpc
-
+                        spaceSFX.play()
                 else:
                     clicks += cpc
+                    spaceSFX.play()
                 pygame.display.set_caption("Spacebar Clicker: %s (%s space%s)" % (version, clicks, '' if clicks == 1 else 's'))
                 descriptionText = makeText(getDescriptionText(), (255, 255, 255), pygame.font.Font(titleFont, textSizeDescription))
 
