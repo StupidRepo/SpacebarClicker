@@ -94,8 +94,12 @@ def saveGame():
         saveFile.write(dataToSave % (clicks, cpc, version))
         saveFile.close()
 
-def resetSaveGame():
+def resetSaveGame(ourSpaces=None, ourCPC=None):
     os.remove(saveLocation)
+    if ourSpaces is not None and ourCPC is not None:
+        with open(saveLocation, "w") as saveFile:
+            saveFile.write(dataToSave % (ourSpaces, ourCPC, version))
+            saveFile.close()
 
 def loadSavedGame():
     global clicks, cpc
