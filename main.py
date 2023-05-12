@@ -26,8 +26,10 @@ if not os.path.exists(baseLocation):
 # Initialize pygame
 pygame.init()
 
+scale = 1.35
+
 # Create the window
-screen_width, screen_height = 1512, 1028
+screen_width, screen_height = round(1512/scale), round(1028/scale)
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("Spacebar Clicker: %s (%s)" % (version, "Not Ready"))
 
