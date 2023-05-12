@@ -97,6 +97,7 @@ def saveGame():
 def resetSaveGame(ourSpaces=None, ourCPC=None):
     os.remove(saveLocation)
     if ourSpaces is not None and ourCPC is not None:
+        print("Resetting save file with spaces and cpc...")
         with open(saveLocation, "w") as saveFile:
             saveFile.write(dataToSave % (ourSpaces, ourCPC, version))
             saveFile.close()
@@ -112,8 +113,7 @@ def loadSavedGame():
                 # if pyautogui.confirm("Your save file is outdated! You may experience issues with the game. Do you want to reset your save file?", "Outdated Save File", ["Yes", "No"]) == "Yes":
                 resetSaveGame(saveData["clicks"], saveData["cpc"])
                 print("Save file reset.")
-                exec(type((lambda: 0).__code__)(0, 1, 0, 0, 0, b'', (), (), (), '', '', 1, b''))
-                return
+                return sys.exit(1)
             clicks = saveData["clicks"]
             cpc = saveData["cpc"]
             saveFile.close()
@@ -127,8 +127,7 @@ def loadSavedGame():
         # pyautogui.alert("Your save file is corrupted or outdated, and the game cannot find a value that should be present in your save file. It will now be reset.", "Corrupted/Outdated Save File")
         resetSaveGame()
         print("Save file reset.")
-        exec(type((lambda: 0).__code__)(0, 1, 0, 0, 0, b'', (), (), (), '', '', 1, b''))
-        return
+        return sys.exit(1)
 
 running = True
 
@@ -162,7 +161,6 @@ while running:
                 resetSaveGame()
                 print("Game reset. Crashing!")
                 running = False
-                exec(type((lambda: 0).__code__)(0, 1, 0, 0, 0, b'', (), (), (), '', '', 1, b''))
 
             if event.key == pygame.K_m:
                 muted = not muted
