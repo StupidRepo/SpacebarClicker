@@ -42,3 +42,24 @@ jobs:
         with:
           name: SpacebarClicker-Linux.zip
           path: dist/SpacebarClicker-Linux.zip
+
+  build-macOS:
+    runs-on: macos-11
+    steps:
+      #      - name: Checkout
+      - uses: actions/checkout@v3
+      #      - name: Set up Python 3.11
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      #      - name: Install dependencies
+      - run: python -m pip install pygame appdirs pyinstaller
+      #      - name: Build for Linux
+      - run: python build.py
+      #      - name: Compress ZIP...
+      - run: cd dist && zip -r SpacebarClicker-macOS.zip *
+      #      - name: ...and upload!
+      - uses: actions/upload-artifact@v3
+        with:
+          name: SpacebarClicker-macOS.zip
+          path: dist/SpacebarClicker-macOS.zip
