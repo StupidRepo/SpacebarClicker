@@ -10,21 +10,21 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Checkout
-      - uses: actions/checkout@v3
+        uses: actions/checkout@v3
 
       - name: Set up Python 3.11
-      - uses: actions/setup-python@v4
+        uses: actions/setup-python@v4
         with:
           python-version: '3.11'
 
       - name: Install dependencies
-      - run: python -m pip install -r requirements.txt
+        run: python -m pip install -r requirements.txt
 
       - name: Build for Windows
-      - run: python buildWin.py
+        run: python buildWin.py
 
       - name: And upload!
-      - uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v3
         with:
           name: Windows
           path: dist/*
@@ -32,20 +32,22 @@ jobs:
   build-linux:
     runs-on: ubuntu-latest
     steps:
-#      - name: Checkout
-      - uses: actions/checkout@v3
-#      - name: Set up Python 3.11
-      - uses: actions/setup-python@v4
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v4
         with:
           python-version: '3.11'
-#      - name: Install dependencies
-      - run: python -m pip install -r requirements.txt
-#      - name: Build for Linux
-      - run: python build.py
-#      - name: Compress ZIP...
-#      - run: cd dist && zip -r SpacebarClicker-Linux.zip *
-#      - name: ...and upload!
-      - uses: actions/upload-artifact@v3
+
+      - name: Install dependencies
+        run: python -m pip install -r requirements.txt
+
+      - name: Build for Linux
+        run: python build.py
+
+      - name: Upload
+        uses: actions/upload-artifact@v3
         with:
           name: Linux
           path: dist/*
@@ -53,21 +55,25 @@ jobs:
   build-macOS:
     runs-on: macos-11
     steps:
-      #      - name: Checkout
-      - uses: actions/checkout@v3
-      #      - name: Set up Python 3.11
-      - uses: actions/setup-python@v4
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v4
         with:
           python-version: '3.11'
-      #      - name: Install dependencies
-      - run: python -m pip install -r requirements.txt
-      #      - name: Build for Linux
-      - run: python build.py
-      #      - name: Compress ZIP...
-#      - run: cd dist && zip -r SpacebarClicker-macOS.zip *
-      #      - name: ...and upload!
-      - run: chmod +x dist/SpacebarClicker.app/Contents/MacOS/SpacebarClicker
-      - uses: actions/upload-artifact@v3
+
+      - name: Install dependencies
+        run: python -m pip install -r requirements.txt
+
+      - name: Build for Mac
+        run: python build.py
+
+      - name: Fix Permissions
+        run: chmod +x dist/SpacebarClicker.app/Contents/MacOS/SpacebarClicker
+
+      - name: Upload
+        uses: actions/upload-artifact@v3
         with:
           name: macOS
           path: dist/*
