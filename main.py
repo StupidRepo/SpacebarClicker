@@ -208,7 +208,7 @@ maxSuperClicksUntilMegaClick = random.randint(7, 10)
 barColour = (255 - (255 * (superClicks / maxSuperClicksUntilMegaClick)), 100 + (155 * (superClicks / maxSuperClicksUntilMegaClick)), 100)
 
 while running:
-    megaClickFormula = round(1000 * cpc * max(clicks // 10000000, 1.5))
+    megaClickFormula = round(1000 * cpc * min(max((clicks / 1000) / 50, 1), 100))
     screen.fill((155, 155, 155))
     barColour = (255 - (255 * (superClicks / maxSuperClicksUntilMegaClick)), 100 + (155 * (superClicks / maxSuperClicksUntilMegaClick)), 100)
 
