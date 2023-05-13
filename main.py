@@ -212,14 +212,8 @@ while running:
             superclick()
             clicks += 10 * cpc
             SUPERCLICK_EVENT_TIME = random.randint(SUPERCLICK_EVENT_TIME_MIN, SUPERCLICK_EVENT_TIME_MAX)
-            pygame.time.set_timer(SUPERCLICK_EVENT, SUPERCLICK_EVENT_TIME, 1)
+            pygame.time.set_timer(SUPERCLICK_EVENT, SUPERCLICK_EVENT_TIME-1*1000, 1)
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_x:
-                print("Resetting game...")
-                resetSaveGame()
-                print("Game reset. Crashing!")
-                running = False
-
             if event.key == pygame.K_m:
                 muted = not muted
 
@@ -251,6 +245,10 @@ while running:
     spaceText = makeText(f"{clicks} space{'' if clicks == 1 else 's'}", (255, 255, 255), spaceFontClass)
 
     Icon("assets/textures/mute.png" if muted else "assets/textures/unmute.png").draw(screen)
+
+    if pygame.key.get_pressed()[pygame.K_RSHIFT] and pygame.key.get_pressed()[pygame.K_LSHIFT] and pygame.key.get_pressed()[pygame.K_x]:
+        resetSaveGame()
+        running = False
 
     screen.blit(spaceText, ((screen.get_width() - spaceText.get_width()) // 2, 0))
     screen.blit(descriptionText, ((screen.get_width() - descriptionText.get_width()) // 2, (textSizeDescription + textSizeClicks) + (textSizeClicks // 4) + 4 + textSizeDescription - textSizeClicks - textSizeClicks // 8))
