@@ -31,6 +31,8 @@ X - Reset save file
 ```
 ## Installing
 ### macOS + Windows + Linux
+> **Note**: macOS builds (both unstable and stable) are not signed, and you may get the `The application "SpacebarClicker.app" can’t be opened.` error. 
+
 Latest stable build:
 - [macOS][macs]
 - [Windows][wins]
@@ -45,7 +47,7 @@ Latest unstable build:
 
 > **Warning**: The unstable builds may be unstable, and may not work properly.
 
-The executable is `SpacebarClicker.app` for macOS, `SpacebarClicker` (the file without the file extentsion) for GNU/Linux or `SpacebarClicker.exe` for Windows.
+The executable is `SpacebarClicker` (the file without the file extenstion) for macOS, `SpacebarClicker` (the file without the file extentsion) for GNU/Linux or `SpacebarClicker.exe` for Windows.
 ## Building
 ### macOS + Windows + Linux
 `git clone` the repository, then run:

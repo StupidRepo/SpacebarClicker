@@ -5,6 +5,5 @@ PyInstaller.__main__.run([
     '--add-data=assets:assets',
     '--add-data=version.txt:.',
     '--name=SpacebarClicker',
-    '--noconfirm',
-    '--windowed'
+    '--noconfirm'
 ])
