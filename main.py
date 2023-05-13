@@ -247,9 +247,10 @@ while running:
                 megaclick()
                 SUPERCLICK_EVENT_TIME_MIN = max(SUPERCLICK_EVENT_TIME_MIN - 250, 1000)
                 SUPERCLICK_EVENT_TIME_MAX = max(SUPERCLICK_EVENT_TIME_MAX - 250, 1000)
+                print(SUPERCLICK_EVENT_TIME_MIN, SUPERCLICK_EVENT_TIME_MAX)
                 clicks += megaClickFormula
                 superClicks = 0
-                maxSuperClicksUntilMegaClick = random.randint(round(10*SUPERCLICK_EVENT_TIME_MIN/1000), round(30*SUPERCLICK_EVENT_TIME_MIN/1000))
+                maxSuperClicksUntilMegaClick = random.randint(round(10*SUPERCLICK_EVENT_TIME_MIN/1000*1), round(30*SUPERCLICK_EVENT_TIME_MIN/1000*3))
             else:
                 superclick()
                 clicks += 10 * cpc
