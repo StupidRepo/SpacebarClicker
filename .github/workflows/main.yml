@@ -72,8 +72,8 @@ jobs:
       - name: Build
         run: python build.py
 
-      - name: Fix Permissions
-        run: chmod +x dist/SpacebarClicker.app/Contents/MacOS/SpacebarClicker
+#      - name: Fix Permissions
+#        run: chmod +x dist/SpacebarClicker.app/Contents/MacOS/SpacebarClicker
 
       - name: Upload
         uses: actions/upload-artifact@v3
