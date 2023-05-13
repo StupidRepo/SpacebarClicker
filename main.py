@@ -158,7 +158,7 @@ def loadSavedGame():
         # pyautogui.alert("Your save file is corrupted or outdated, and the game cannot find a value that should be present in your save file. It will now be reset.", "Corrupted/Outdated Save File")
         resetSaveGame()
         print("Save file reset.")
-        return sys.exit(1)
+        saveGame()
 
 running = True
 
@@ -245,12 +245,12 @@ while running:
             superClicks += 1
             if superClicks > maxSuperClicksUntilMegaClick:
                 megaclick()
-                SUPERCLICK_EVENT_TIME_MIN = max(SUPERCLICK_EVENT_TIME_MIN - 250, 1000)
-                SUPERCLICK_EVENT_TIME_MAX = max(SUPERCLICK_EVENT_TIME_MAX - 250, 1000)
-                print(SUPERCLICK_EVENT_TIME_MIN, SUPERCLICK_EVENT_TIME_MAX)
+                # SUPERCLICK_EVENT_TIME_MIN = max(SUPERCLICK_EVENT_TIME_MIN - 250, 1000)
+                # SUPERCLICK_EVENT_TIME_MAX = max(SUPERCLICK_EVENT_TIME_MAX - 250, 1000)
+                # print(SUPERCLICK_EVENT_TIME_MIN, SUPERCLICK_EVENT_TIME_MAX)
                 clicks += megaClickFormula
                 superClicks = 0
-                maxSuperClicksUntilMegaClick = random.randint(round(10*SUPERCLICK_EVENT_TIME_MIN/1000*1), round(30*SUPERCLICK_EVENT_TIME_MIN/1000*3))
+                maxSuperClicksUntilMegaClick = random.randint(round(10*random.randint(1, 3)), round(30*random.randint(3, 6)))
             else:
                 superclick()
                 clicks += 10 * cpc
