@@ -207,6 +207,9 @@ maxSuperClicksUntilMegaClick = random.randint(7, 10)
 
 barColour = (255 - (255 * (superClicks / maxSuperClicksUntilMegaClick)), 100 + (155 * (superClicks / maxSuperClicksUntilMegaClick)), 100)
 
+secretMusicEnabled = False
+secretMusic = getSoundByName("secretmusic", "special")
+
 while running:
     megaClickFormula = round(1000 * cpc * min(max((clicks / 1000) / 50, 1), 100))
     screen.fill((155, 155, 155))
@@ -256,6 +259,14 @@ while running:
                 resizeable = not resizeable
                 screen = pygame.display.set_mode((screen.get_width(), screen.get_height()),
                                                  flags=(pygame.RESIZABLE if resizeable else 0))
+
+            if event.key == pygame.K_h:
+                if pygame.key.get_pressed()[pygame.K_e] and pygame.key.get_pressed()[pygame.K_l] and pygame.key.get_pressed()[pygame.K_p]:
+                    secretMusicEnabled = not secretMusicEnabled
+                    if secretMusicEnabled:
+                        secretMusic.play(-1)
+                    else:
+                        secretMusic.stop()
 
             if event.key == pygame.K_SPACE or event.key == pygame.K_RETURN or event.key == pygame.K_BACKSPACE:
                 if impossible:
