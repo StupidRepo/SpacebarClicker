@@ -43,7 +43,7 @@ Latest unstable build:
 - [GNU/Linux][linu]
 - [All][allu]
 
-(Unstable build may reset your save file!)
+> **Warning**: The unstable builds may be unstable, and may not work properly.
 
 The executable is `SpacebarClicker.app` for macOS, `SpacebarClicker` (the file without the file extentsion) for GNU/Linux or `SpacebarClicker.exe` for Windows.
 ## Building
