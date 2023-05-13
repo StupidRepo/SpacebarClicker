@@ -59,7 +59,7 @@ jobs:
       #      - name: Compress ZIP...
 #      - run: cd dist && zip -r SpacebarClicker-macOS.zip *
       #      - name: ...and upload!
-      - run: chmod +x dist/SpacebarClicker-macOS.app/Contents/MacOS/SpacebarClicker
+      - run: chmod +x dist/SpacebarClicker.app/Contents/MacOS/SpacebarClicker
       - uses: actions/upload-artifact@v3
         with:
           name: macOS
