@@ -97,9 +97,11 @@ def initSounds():
     sounds = thisSounds
 
 def getSoundByName(name, folder):
-    for soundObject in sounds[folder]:
-        if soundObject["name"] == name:
-            return soundObject["sound"]
+    if not muted:
+        for soundObject in sounds[folder]:
+            if soundObject["name"] == name:
+                return soundObject["sound"]
+    return None
 
 def makeText(text, color, font):
     return font.render(text, False, color)
@@ -171,9 +173,16 @@ def ambient():
     random.choice(sounds["ambient"])["sound"].play()
 
 def superclick():
-    if not muted:
-        getSoundByName("superclick", "special").play()
+    theSound = getSoundByName("superclick", "special")
+    if theSound is not None:
+        theSound.play()
 
+def megaclick():
+    theSound = getSoundByName("megaclick", "special")
+    if theSound is not None:
+        theSound.play()
+
+percentFontClass = pygame.font.Font(titleFont, 16)
 descFontClass = pygame.font.Font(titleFont, textSizeDescription)
 cpcFontClass = pygame.font.Font(titleFont, textSizeCPC)
 spaceFontClass = pygame.font.Font(titleFont, textSizeClicks)
@@ -193,8 +202,21 @@ SUPERCLICK_EVENT, SUPERCLICK_EVENT_TIME = pygame.USEREVENT + 2, random.randint(S
 pygame.time.set_timer(AMBIENT_EVENT, AMBIENT_EVENT_TIME, 1)
 pygame.time.set_timer(SUPERCLICK_EVENT, SUPERCLICK_EVENT_TIME, 1)
 
+superClicks = 0
+maxSuperClicksUntilMegaClick = random.randint(7, 10)
+
+barColour = (255 - (255 * (superClicks / maxSuperClicksUntilMegaClick)), 100 + (155 * (superClicks / maxSuperClicksUntilMegaClick)), 100)
+
 while running:
+    megaClickFormula = round(1000 * cpc * max(clicks // 10000000, 1.5))
     screen.fill((155, 155, 155))
+    barColour = (255 - (255 * (superClicks / maxSuperClicksUntilMegaClick)), 100 + (155 * (superClicks / maxSuperClicksUntilMegaClick)), 100)
+
+    pygame.draw.rect(screen, barColour, (screen.get_width() // 2 - ((screen.get_width() // 2) / 2), screen.get_height() - 50, (screen.get_width() // 2) * (superClicks / maxSuperClicksUntilMegaClick), 30), 0, 4, 4, 4, 4)
+    pygame.draw.rect(screen, (255, 255, 255), (screen.get_width() // 2 - ((screen.get_width() // 2) / 2), screen.get_height() - 50, screen.get_width() // 2, 30), 4, 4, 4, 4, 4)
+
+    superClicksText = makeText(f"Megaclick will give you +{megaClickFormula} clicks! ({round(superClicks/maxSuperClicksUntilMegaClick * 100, 2)}% - {superClicks}/{maxSuperClicksUntilMegaClick})", (255, 255, 255), percentFontClass)
+    screen.blit(superClicksText, (screen.get_width() // 2 - ((screen.get_width() // 2) / 2) + 4, screen.get_height() - 50 - 20))
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             print("Saving game...")
@@ -209,8 +231,17 @@ while running:
             AMBIENT_EVENT_TIME = random.randint(AMBIENT_EVENT_TIME_MIN, AMBIENT_EVENT_TIME_MAX)
             pygame.time.set_timer(AMBIENT_EVENT, AMBIENT_EVENT_TIME, 1)
         if event.type == SUPERCLICK_EVENT:
-            superclick()
-            clicks += 10 * cpc
+            superClicks += 1
+            if superClicks > maxSuperClicksUntilMegaClick:
+                megaclick()
+                SUPERCLICK_EVENT_TIME_MIN = max(SUPERCLICK_EVENT_TIME_MIN - 250, 1000)
+                SUPERCLICK_EVENT_TIME_MAX = max(SUPERCLICK_EVENT_TIME_MAX - 250, 1000)
+                clicks += megaClickFormula
+                superClicks = 0
+                maxSuperClicksUntilMegaClick = random.randint(round(10*SUPERCLICK_EVENT_TIME_MIN/1000), round(30*SUPERCLICK_EVENT_TIME_MIN/1000))
+            else:
+                superclick()
+                clicks += 10 * cpc
             SUPERCLICK_EVENT_TIME = random.randint(SUPERCLICK_EVENT_TIME_MIN, SUPERCLICK_EVENT_TIME_MAX)
             pygame.time.set_timer(SUPERCLICK_EVENT, SUPERCLICK_EVENT_TIME-1*1000, 1)
         if event.type == pygame.KEYDOWN:
@@ -235,13 +266,14 @@ while running:
                 else:
                     clicks += cpc
                     bleep()
-                pygame.display.set_caption(
-                    "Spacebar Clicker: %s (%s space%s)" % (version, clicks, '' if clicks == 1 else 's'))
                 descriptionText = makeText(getDescriptionText(), (255, 255, 255), descFontClass)
 
-    cpcText = makeText(f"{cpc} spaces per click{f' (with a {round(chanceToClick * 100, 1)}% chance of a successful click)' if impossible else ''}", (255, 255, 255), cpcFontClass)
-    cpsText = makeText(f"{10 * cpc} spaces per {round(SUPERCLICK_EVENT_TIME / 1000)} seconds", (255, 255, 255), cpcFontClass)
+    clicks = min(clicks, sys.maxsize)
+    pygame.display.set_caption(
+        "Spacebar Clicker: %s (%s space%s)" % (version, clicks, '' if clicks == 1 else 's'))
 
+    cpcText = makeText(f"{cpc} spaces per click{f' (with a {round(chanceToClick * 100, 1)}% chance of a successful click)' if impossible else ''}", (255, 255, 255), cpcFontClass)
+    cpsText = makeText(f"{10 * cpc} spaces per {round(SUPERCLICK_EVENT_TIME / 1000, 3)} seconds", (255, 255, 255), cpcFontClass)
     spaceText = makeText(f"{clicks} space{'' if clicks == 1 else 's'}", (255, 255, 255), spaceFontClass)
 
     Icon("assets/textures/mute.png" if muted else "assets/textures/unmute.png").draw(screen)
