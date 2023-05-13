@@ -62,4 +62,4 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: macOS
-          path: dist/SpacebarClicker.app
+          path: dist/*
