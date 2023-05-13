@@ -31,7 +31,7 @@ X - Reset save file
 ```
 ## Installing
 ### macOS + Windows + Linux
-> **Note**: macOS builds (both unstable and stable) are not signed, and you may get the `The application "SpacebarClicker.app" can’t be opened.` error. 
+> **Note**: For macOS builds, you will need to open `Terminal.app` and run `chmod +x /path/to/SpacebarClicker` to make the file executable. (e.g. if the file is in your Downloads folder, you will need to run `chmod +x ~/Downloads/SpacebarClicker/SpacebarClicker`)
 
 Latest stable build:
 - [macOS][macs]
