@@ -94,6 +94,14 @@ def initSounds():
             "name": os.path.basename(sound).replace(".wav", ""),
             "sound": pygame.mixer.Sound(sound)
         })
+    for sound in glob("assets/audio/**/*.ogg"):
+        folderName = sound.split("/")[2]
+        if folderName not in thisSounds:
+            thisSounds[folderName] = []
+        thisSounds[folderName].append({
+            "name": os.path.basename(sound).replace(".ogg", ""),
+            "sound": pygame.mixer.Sound(sound)
+        })
     sounds = thisSounds
 
 def getSoundByName(name, folder):
