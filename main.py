@@ -4,7 +4,7 @@ import random
 import sys
 from appdirs import user_data_dir
 import os
-# import pyautogui
+from glob import glob
 
 abspath = os.path.abspath(__file__)
 dname = os.path.dirname(abspath)
@@ -81,6 +81,26 @@ def getDescriptionText():
     descriptionString = descriptionString.replace("{clicks}", str(clicks)).replace("{cpc}", str(cpc)).replace("{chanceToClick}", str(chanceToClick * 100)).replace("{version}", version).replace("{space}", "space" if clicks == 1 else "spaces").replace("{intlimit}", str(sys.maxsize)).replace('{untilintlimit}', str(sys.maxsize - clicks))
     return descriptionString
 
+sounds = {}
+
+def initSounds():
+    global sounds
+    thisSounds = {}
+    for sound in glob("assets/audio/**/*.wav"):
+        folderName = sound.split("/")[2]
+        if folderName not in thisSounds:
+            thisSounds[folderName] = []
+        thisSounds[folderName].append({
+            "name": os.path.basename(sound).replace(".wav", ""),
+            "sound": pygame.mixer.Sound(sound)
+        })
+    sounds = thisSounds
+
+def getSoundByName(name, folder):
+    for soundObject in sounds[folder]:
+        if soundObject["name"] == name:
+            return soundObject["sound"]
+
 def makeText(text, color, font):
     return font.render(text, False, color)
 
@@ -140,17 +160,38 @@ descriptionText = makeText(getDescriptionText(), (255, 255, 255), pygame.font.Fo
 
 pygame.display.set_caption("Spacebar Clicker: %s (%s space%s)" % (version, clicks, '' if clicks == 1 else 's'))
 
-clickSfxs = [pygame.mixer.Sound("assets/audio/gain1.wav"), pygame.mixer.Sound("assets/audio/gain2.wav"), pygame.mixer.Sound("assets/audio/gain3.wav"), pygame.mixer.Sound("assets/audio/gain4.wav"), pygame.mixer.Sound("assets/audio/gain5.wav")]
-
 muted = False
 
 def bleep():
     if not muted:
-        random.choice(clickSfxs).play()
+        random.choice(sounds["clicks"])["sound"].play()
+
+def ambient():
+    # if not muted:
+    random.choice(sounds["ambient"])["sound"].play()
+
+def superclick():
+    if not muted:
+        getSoundByName("superclick", "special").play()
 
 descFontClass = pygame.font.Font(titleFont, textSizeDescription)
 cpcFontClass = pygame.font.Font(titleFont, textSizeCPC)
 spaceFontClass = pygame.font.Font(titleFont, textSizeClicks)
+
+initSounds()
+
+# print(sounds)
+
+AMBIENT_EVENT_TIME_MIN = 60*1000
+AMBIENT_EVENT_TIME_MAX = 300*1000
+
+SUPERCLICK_EVENT_TIME_MIN = 3*1000
+SUPERCLICK_EVENT_TIME_MAX = 3*1000
+
+AMBIENT_EVENT, AMBIENT_EVENT_TIME = pygame.USEREVENT + 1, random.randint(AMBIENT_EVENT_TIME_MIN, AMBIENT_EVENT_TIME_MAX)
+SUPERCLICK_EVENT, SUPERCLICK_EVENT_TIME = pygame.USEREVENT + 2, random.randint(SUPERCLICK_EVENT_TIME_MIN, SUPERCLICK_EVENT_TIME_MAX)
+pygame.time.set_timer(AMBIENT_EVENT, AMBIENT_EVENT_TIME, 1)
+pygame.time.set_timer(SUPERCLICK_EVENT, SUPERCLICK_EVENT_TIME, 1)
 
 while running:
     screen.fill((155, 155, 155))
@@ -160,6 +201,18 @@ while running:
             saveGame()
             print("Game saved. Exiting!")
             running = False
+        if event.type == AMBIENT_EVENT:
+            ambient()
+            if not impossible:
+                clicks += 100 * cpc
+            cpc += 1
+            AMBIENT_EVENT_TIME = random.randint(AMBIENT_EVENT_TIME_MIN, AMBIENT_EVENT_TIME_MAX)
+            pygame.time.set_timer(AMBIENT_EVENT, AMBIENT_EVENT_TIME, 1)
+        if event.type == SUPERCLICK_EVENT:
+            superclick()
+            clicks += 10 * cpc
+            SUPERCLICK_EVENT_TIME = random.randint(SUPERCLICK_EVENT_TIME_MIN, SUPERCLICK_EVENT_TIME_MAX)
+            pygame.time.set_timer(SUPERCLICK_EVENT, SUPERCLICK_EVENT_TIME, 1)
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_x:
                 print("Resetting game...")
@@ -171,11 +224,13 @@ while running:
                 muted = not muted
 
             if event.key == pygame.K_c:
-                screen = pygame.display.set_mode((screen_width, screen_height), flags=(pygame.RESIZABLE if resizeable else 0))
+                screen = pygame.display.set_mode((screen_width, screen_height),
+                                                 flags=(pygame.RESIZABLE if resizeable else 0))
 
             if event.key == pygame.K_f:
                 resizeable = not resizeable
-                screen = pygame.display.set_mode((screen.get_width(), screen.get_height()), flags=(pygame.RESIZABLE if resizeable else 0))
+                screen = pygame.display.set_mode((screen.get_width(), screen.get_height()),
+                                                 flags=(pygame.RESIZABLE if resizeable else 0))
 
             if event.key == pygame.K_SPACE or event.key == pygame.K_RETURN or event.key == pygame.K_BACKSPACE:
                 if impossible:
@@ -186,10 +241,12 @@ while running:
                 else:
                     clicks += cpc
                     bleep()
-                pygame.display.set_caption("Spacebar Clicker: %s (%s space%s)" % (version, clicks, '' if clicks == 1 else 's'))
+                pygame.display.set_caption(
+                    "Spacebar Clicker: %s (%s space%s)" % (version, clicks, '' if clicks == 1 else 's'))
                 descriptionText = makeText(getDescriptionText(), (255, 255, 255), descFontClass)
 
     cpcText = makeText(f"{cpc} spaces per click{f' (with a {round(chanceToClick * 100, 1)}% chance of a successful click)' if impossible else ''}", (255, 255, 255), cpcFontClass)
+    cpsText = makeText(f"{10 * cpc} spaces per {round(SUPERCLICK_EVENT_TIME / 1000)} seconds", (255, 255, 255), cpcFontClass)
 
     spaceText = makeText(f"{clicks} space{'' if clicks == 1 else 's'}", (255, 255, 255), spaceFontClass)
 
@@ -197,7 +254,8 @@ while running:
 
     screen.blit(spaceText, ((screen.get_width() - spaceText.get_width()) // 2, 0))
     screen.blit(descriptionText, ((screen.get_width() - descriptionText.get_width()) // 2, (textSizeDescription + textSizeClicks) + (textSizeClicks // 4) + 4 + textSizeDescription - textSizeClicks - textSizeClicks // 8))
-    screen.blit(cpcText, ((screen.get_width() - cpcText.get_width()) // 2, (textSizeDescription + textSizeClicks) + (textSizeClicks // 4) + 4 + textSizeDescription - textSizeClicks // 1.75))
+    screen.blit(cpcText, ((screen.get_width() - cpcText.get_width()) // 2, (textSizeDescription + textSizeClicks) + (textSizeClicks // 4) + 4 + textSizeDescription - textSizeClicks // 1.4))
+    screen.blit(cpsText, ((screen.get_width() - cpsText.get_width()) // 2, (textSizeDescription + textSizeClicks) + (textSizeClicks // 4) + 4 + textSizeDescription - textSizeClicks // 1.4 + textSizeCPC))
     pygame.display.update()
 
 # Clean up
