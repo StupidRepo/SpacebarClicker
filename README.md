@@ -29,6 +29,11 @@ C - Reset window size
 F - Toggle resizeability
 X - Reset save file
 ```
+## Updating
+### macOS + Windows + Linux
+To update the game, you will need to download the latest build from the [releases page][alls] (or grab an [unstable build](#installing)), and then replace the executable file (see [`What's the 'executable file'?`](#whats-the-executable-file)) with the new one. You can then run the game as normal.
+
+> **Warning**: Your save file will be erased, ***HOWEVER*** it will copy your spaces and cpc to the new save file.
 ## Installing
 ### macOS + Windows + Linux
 > **Note**: For macOS builds, you will need to open `Terminal.app` and run `chmod +x /path/to/SpacebarClicker` to make the file executable. (e.g. if the file is in your Downloads folder, you will need to run `chmod +x ~/Downloads/SpacebarClicker/SpacebarClicker`)
@@ -45,8 +50,9 @@ Latest unstable build:
 - [GNU/Linux][linu]
 - [All][allu]
 
-> **Warning**: The unstable builds may be unstable, and may not work properly.
+> **Warning**: The unstable builds are truly unstable, and may not work properly.
 
+### What's the 'executable file'?
 The executable is `SpacebarClicker` (the file without the file extenstion) for macOS, `SpacebarClicker` (the file without the file extentsion) for GNU/Linux or `SpacebarClicker.exe` for Windows.
 ## Building
 ### macOS + Windows + Linux

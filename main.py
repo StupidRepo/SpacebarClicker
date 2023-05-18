@@ -159,7 +159,9 @@ def loadSavedGame():
                 # if pyautogui.confirm("Your save file is outdated! You may experience issues with the game. Do you want to reset your save file?", "Outdated Save File", ["Yes", "No"]) == "Yes":
                 resetSaveGame(saveData["clicks"], saveData["cpc"])
                 print("Save file reset.")
-                return sys.exit(1)
+                clicks = saveData["clicks"]
+                cpc = saveData["cpc"]
+                # return sys.exit(1)
             clicks = saveData["clicks"]
             cpc = saveData["cpc"]
             saveFile.close()
@@ -174,6 +176,8 @@ def loadSavedGame():
         resetSaveGame()
         print("Save file reset.")
         saveGame()
+    except Exception as err:
+        print("Unknown error. Please make an issue on the GitHub. Error: %s" % err)
 
 running = True
 
