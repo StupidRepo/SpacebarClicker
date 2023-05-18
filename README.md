@@ -31,9 +31,9 @@ X - Reset save file
 ```
 ## Updating
 ### macOS + Windows + Linux
-To update the game, you will need to download the latest build from the [releases page][alls] (or grab an [unstable build](#installing)), and then replace the executable file (see [`What's the 'executable file'?`](#whats-the-executable-file)) with the new one. You can then run the game as normal.
+To update the game, you will need to download the latest stable build from the [releases page][alls] (or an [unstable build](#installing)), and then run the game as normal from the new executable file.
 
-> **Warning**: Your save file will be erased, ***HOWEVER*** it will copy your spaces and cpc to the new save file.
+> **Warning**: Your save file will be erased, ***HOWEVER*** it will copy your spaces and cpc to the new save file. Please do **NOT** downgrade your game, as it is not supported and you will not receive any help if you do so.
 ## Installing
 ### macOS + Windows + Linux
 > **Note**: For macOS builds, you will need to open `Terminal.app` and run `chmod +x /path/to/SpacebarClicker` to make the file executable. (e.g. if the file is in your Downloads folder, you will need to run `chmod +x ~/Downloads/SpacebarClicker/SpacebarClicker`)

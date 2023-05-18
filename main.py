@@ -13,6 +13,29 @@ abspath = os.path.abspath(__file__)
 dname = os.path.dirname(abspath)
 os.chdir(dname)
 
+maximumFallenKeys = 1000
+
+delta = 1
+
+class FallenKey(pygame.sprite.Sprite):
+    # constructor
+    def __init__(self, image, x, y):
+        super().__init__()
+        self.image = pygame.image.load(image)
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+        self.image = pygame.transform.scale(self.image, (round(self.rect.width / 2), round(self.rect.height / 2)))
+        self.speed = random.uniform(0.1, 0.05) * delta
+
+    def update(self):
+        self.rect.y += self.speed
+        if self.rect.y > screen.get_height() + 100:
+            self.kill()
+
+fallenKeys = pygame.sprite.Group()
+keyImages = glob("assets/textures/keys/*.png")
+
 try:
     with open("version.txt", "r") as versionFile:
         version = versionFile.read()
@@ -54,13 +77,16 @@ textSizeCPC = 19
 lastText = ""
 
 class Icon(pygame.sprite.Sprite):
-    def __init__(self, image):
+    def __init__(self, image, x=0, y=0):
         super().__init__()
         self.image = pygame.image.load(image)
         self.rect = self.image.get_rect()
+        self.x = x
+        self.y = y
 
     def draw(self, screenLol):
-        screenLol.blit(self.image, self.rect)
+        # blit with position
+        screenLol.blit(self.image, (self.x, self.y))
 
 try:
     with open(descriptionsLocation, "r") as descriptionsFile:
@@ -184,8 +210,12 @@ descriptionText = makeText(getDescriptionText(), (255, 255, 255), pygame.font.Fo
 pygame.display.set_caption("Spacebar Clicker: %s (%s space%s)" % (version, clicks, '' if clicks == 1 else 's'))
 
 muted = False
+antikey = False
 
 def bleep():
+    fallenX = random.randint(50, screen.get_width() - 50)
+    fallenKey = FallenKey(random.choice(keyImages), fallenX, 0)
+    fallenKeys.add(fallenKey)
     if not muted:
         random.choice(sounds["clicks"])["sound"].play()
 
@@ -228,6 +258,8 @@ secretMusic = getSoundByName("secretmusic", "special")
 
 rainbowSpeed = 20
 
+clock = pygame.time.Clock()
+
 while running:
     barColour = colorsys.hsv_to_rgb((time.time() / rainbowSpeed) % 1, 1, 1)
     barColour = (round(barColour[0] * 255), round(barColour[1] * 255), round(barColour[2] * 255))
@@ -235,10 +267,18 @@ while running:
     megaClickFormula = round(10 * (cpc // 2) + max((clicks // 20), 10))
     screen.fill((155, 155, 155))
 
+    if len(fallenKeys) > 0 and not antikey:
+        fallenKeys.update()
+        fallenKeys.draw(screen)
+    elif antikey and len(fallenKeys) > 0:
+        fallenKeys.empty()
+    elif len(fallenKeys) >= maximumFallenKeys:
+        fallenKeys.remove(fallenKeys.sprites()[0])
+
     pygame.draw.rect(screen, barColour, (screen.get_width() // 4 - ((screen.get_width() // 4) / 1), screen.get_height() - 50, (screen.get_width() // 1) * (superClicks / maxSuperClicksUntilMegaClick), 30), 0, 3, 3, 3, 3)
     pygame.draw.rect(screen, (255, 255, 255), (screen.get_width() // 4 - ((screen.get_width() // 4) / 1), screen.get_height() - 50, screen.get_width() // 1, 30), 3, 3, 3, 3, 3)
 
-    superClicksText = makeText(f"Megaclick will give you +{megaClickFormula} clicks! ({round(superClicks/maxSuperClicksUntilMegaClick * 100, 2)}% - {superClicks}/{maxSuperClicksUntilMegaClick})", (255, 255, 255), percentFontClass)
+    superClicksText = makeText(f"Megaclick will give you +{megaClickFormula:,} clicks! ({round(superClicks/maxSuperClicksUntilMegaClick * 100, 2)}% - {superClicks}/{maxSuperClicksUntilMegaClick})", (255, 255, 255), percentFontClass)
     screen.blit(superClicksText, ((screen.get_width() - superClicksText.get_width()) // 2, screen.get_height() - 50 - 20))
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -262,6 +302,9 @@ while running:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_m:
                 muted = not muted
+            
+            if event.key == pygame.K_a:
+                antikey = not antikey
 
             if event.key == pygame.K_c:
                 screen = pygame.display.set_mode((screen_width, screen_height),
@@ -301,13 +344,14 @@ while running:
 
     clicks = min(clicks, sys.maxsize)
     pygame.display.set_caption(
-        "Spacebar Clicker: %s (%s space%s)" % (version, clicks, '' if clicks == 1 else 's'))
+        "Spacebar Clicker: %s (%s space%s)" % (version, f'{clicks:,}', '' if clicks == 1 else 's'))
 
-    cpcText = makeText(f"{cpc} spaces per click{f' (with a {round(chanceToClick * 100, 1)}% chance of a successful click)' if impossible else ''}", (255, 255, 255), cpcFontClass)
-    cpsText = makeText(f"{10 * cpc} spaces per {round(SUPERCLICK_EVENT_TIME / 1000, 3)} seconds", (255, 255, 255), cpcFontClass)
-    spaceText = makeText(f"{clicks} space{'' if clicks == 1 else 's'}", (255, 255, 255), spaceFontClass)
+    cpcText = makeText(f"{cpc:,} spaces per click{f' (with a {round(chanceToClick * 100, 1)}% chance of a successful click)' if impossible else ''}", (255, 255, 255), cpcFontClass)
+    cpsText = makeText(f"{(10 * cpc):,} spaces per {round(SUPERCLICK_EVENT_TIME / 1000, 3)} seconds", (255, 255, 255), cpcFontClass)
+    spaceText = makeText(f"{clicks:,} space{'' if clicks == 1 else 's'}", (255, 255, 255), spaceFontClass)
 
     Icon("assets/textures/mute.png" if muted else "assets/textures/unmute.png").draw(screen)
+    Icon("assets/textures/key.png" if not antikey else "assets/textures/antikey.png", 48+8, 0).draw(screen)
 
     if pygame.key.get_pressed()[pygame.K_RSHIFT] and pygame.key.get_pressed()[pygame.K_LSHIFT] and pygame.key.get_pressed()[pygame.K_x]:
         resetSaveGame()
@@ -318,5 +362,6 @@ while running:
     screen.blit(cpcText, ((screen.get_width() - cpcText.get_width()) // 2, (textSizeDescription + textSizeClicks) + (textSizeClicks // 4) + 4 + textSizeDescription - textSizeClicks // 1.4))
     screen.blit(cpsText, ((screen.get_width() - cpsText.get_width()) // 2, (textSizeDescription + textSizeClicks) + (textSizeClicks // 4) + 4 + textSizeDescription - textSizeClicks // 1.4 + textSizeCPC))
     pygame.display.update()
+    delta = clock.tick(60)
 
 pygame.quit()
