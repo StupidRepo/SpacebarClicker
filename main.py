@@ -26,16 +26,17 @@ descriptionsLocation = "assets/core/descriptions.json"
 if not os.path.exists(baseLocation):
     os.makedirs(baseLocation)
 
-# Initialize pygame
 pygame.init()
 
 scale = 1.4
 resizeable = False
 
-# Create the window
+def makeText(text, color, font):
+    return font.render(text, False, color)
+
 screen_width, screen_height = round(1512/scale), round(1028/scale)
 screen = pygame.display.set_mode((screen_width, screen_height))
-pygame.display.set_caption("Spacebar Clicker: %s (%s)" % (version, "Not Ready"))
+pygame.display.set_caption("Spacebar Clicker: %s (%s)" % (version, "Loading game..."))
 
 lastChecked = -1
 
@@ -126,9 +127,6 @@ def getSoundByName(name, folder):
                     return soundObject["sound"]
     return None
 
-def makeText(text, color, font):
-    return font.render(text, False, color)
-
 dataToSave = """{
     "clicks": %s,
     "cpc": %s,
@@ -156,12 +154,8 @@ def loadSavedGame():
             saveData = json.loads(saveFile.read())
             if saveData["version"] != version:
                 print("Save file outdated! Saving spaces and cpc and resetting...")
-                # if pyautogui.confirm("Your save file is outdated! You may experience issues with the game. Do you want to reset your save file?", "Outdated Save File", ["Yes", "No"]) == "Yes":
                 resetSaveGame(saveData["clicks"], saveData["cpc"])
                 print("Save file reset.")
-                clicks = saveData["clicks"]
-                cpc = saveData["cpc"]
-                # return sys.exit(1)
             clicks = saveData["clicks"]
             cpc = saveData["cpc"]
             saveFile.close()
@@ -172,12 +166,12 @@ def loadSavedGame():
         print("Save file created.")
     except KeyError:
         print("Save file is corrupted or outdated. Resetting...")
-        # pyautogui.alert("Your save file is corrupted or outdated, and the game cannot find a value that should be present in your save file. It will now be reset.", "Corrupted/Outdated Save File")
         resetSaveGame()
         print("Save file reset.")
         saveGame()
     except Exception as err:
         print("Unknown error. Please make an issue on the GitHub. Error: %s" % err)
+        sys.exit(255)
 
 running = True
 
@@ -196,7 +190,6 @@ def bleep():
         random.choice(sounds["clicks"])["sound"].play()
 
 def ambient():
-    # if not muted:
     random.choice(sounds["ambient"])["sound"].play()
 
 def superclick():
@@ -215,8 +208,6 @@ cpcFontClass = pygame.font.Font(titleFont, textSizeCPC)
 spaceFontClass = pygame.font.Font(titleFont, textSizeClicks)
 
 initSounds()
-
-# print(sounds)
 
 AMBIENT_EVENT_TIME_MIN = 60*1000
 AMBIENT_EVENT_TIME_MAX = 300*1000
@@ -305,9 +296,6 @@ while running:
     if superClicks > maxSuperClicksUntilMegaClick:
         superClicks = 0
         megaclick()
-        # SUPERCLICK_EVENT_TIME_MIN = max(SUPERCLICK_EVENT_TIME_MIN - 250, 1000)
-        # SUPERCLICK_EVENT_TIME_MAX = max(SUPERCLICK_EVENT_TIME_MAX - 250, 1000)
-        # print(SUPERCLICK_EVENT_TIME_MIN, SUPERCLICK_EVENT_TIME_MAX)
         clicks += megaClickFormula
         maxSuperClicksUntilMegaClick = random.randint(40, 80)
 
@@ -331,5 +319,4 @@ while running:
     screen.blit(cpsText, ((screen.get_width() - cpsText.get_width()) // 2, (textSizeDescription + textSizeClicks) + (textSizeClicks // 4) + 4 + textSizeDescription - textSizeClicks // 1.4 + textSizeCPC))
     pygame.display.update()
 
-# Clean up
 pygame.quit()
