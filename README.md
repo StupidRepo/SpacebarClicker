@@ -28,6 +28,7 @@ M - Mute audio
 C - Reset window size
 F - Toggle resizeability
 X - Reset save file
+A - Toggle Keyism
 ```
 ## Updating
 ### macOS + Windows + Linux
