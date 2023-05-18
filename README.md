@@ -50,7 +50,7 @@ Latest unstable build:
 - [GNU/Linux][linu]
 - [All][allu]
 
-> **Warning**: The unstable builds are truly unstable, and may not work properly.
+> **Warning**: Updating your game will erase your save file. See [`Updating`](#updating) for more information on what happens.
 
 ### What's the 'executable file'?
 The executable is `SpacebarClicker` (the file without the file extenstion) for macOS, `SpacebarClicker` (the file without the file extentsion) for GNU/Linux or `SpacebarClicker.exe` for Windows.
