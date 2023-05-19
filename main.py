@@ -457,7 +457,7 @@ while running:
         if time.time() - lastSave > 10:
             saveGame()
             lastSave = time.time()
-            json.loads('"')
+            # json.loads('"')
 
         screen.blit(spaceText, ((screen.get_width() - spaceText.get_width()) // 2, 0))
         screen.blit(descriptionText, ((screen.get_width() - descriptionText.get_width()) // 2, (textSizeDescription + textSizeClicks) + (textSizeClicks // 4) + 4 + textSizeDescription - textSizeClicks - textSizeClicks // 8))
