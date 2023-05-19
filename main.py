@@ -319,6 +319,7 @@ SUPERCLICK_EVENT_TIME_MAX = 2*1000
 
 AMBIENT_EVENT, AMBIENT_EVENT_TIME = pygame.USEREVENT + 1, random.randint(AMBIENT_EVENT_TIME_MIN, AMBIENT_EVENT_TIME_MAX)
 SUPERCLICK_EVENT, SUPERCLICK_EVENT_TIME = pygame.USEREVENT + 2, random.randint(SUPERCLICK_EVENT_TIME_MIN, SUPERCLICK_EVENT_TIME_MAX)
+AUTOSAVE_EVENT, AUTOSAVE_EVENT_TIME = pygame.USEREVENT + 3, 60*1000
 pygame.time.set_timer(AMBIENT_EVENT, AMBIENT_EVENT_TIME, 1)
 pygame.time.set_timer(SUPERCLICK_EVENT, SUPERCLICK_EVENT_TIME, 1)
 
@@ -340,6 +341,8 @@ console = DebugConsole()
 lastSave = time.time()
 
 console.log("Welcome to Spacebar Clicker! Press - or = to change font size of console.", Colours.GOOD)
+
+chaos = False
 
 while running:
     try:
@@ -366,6 +369,8 @@ while running:
                 saveGame()
                 print("Game saved. Exiting!")
                 running = False
+            if event.type == AUTOSAVE_EVENT:
+                saveGame()
             if event.type == AMBIENT_EVENT:
                 ambient()
                 if not impossible:
@@ -386,6 +391,9 @@ while running:
                 # shitty fullscreen which doesn't work on macOS :/
                 # if event.key == pygame.K_o:
                         # screen = pygame.display.set_mode((screen.get_width(), screen.get_height()), flags=(pygame.FULLSCREEN))
+                
+                if event.key == pygame.K_h:
+                    chaos = not chaos
 
                 if event.key == pygame.K_s:
                     saveGame()
@@ -453,11 +461,10 @@ while running:
         if pygame.key.get_pressed()[pygame.K_RSHIFT] and pygame.key.get_pressed()[pygame.K_LSHIFT] and pygame.key.get_pressed()[pygame.K_x]:
             resetSaveGame()
             running = False
-        
-        if time.time() - lastSave > 10:
-            saveGame()
-            lastSave = time.time()
-            # json.loads('"')
+
+        if chaos and random.random() < 0.8:
+            for i in range(20):
+                fall(True)
 
         screen.blit(spaceText, ((screen.get_width() - spaceText.get_width()) // 2, 0))
         screen.blit(descriptionText, ((screen.get_width() - descriptionText.get_width()) // 2, (textSizeDescription + textSizeClicks) + (textSizeClicks // 4) + 4 + textSizeDescription - textSizeClicks - textSizeClicks // 8))
@@ -465,9 +472,9 @@ while running:
         screen.blit(cpsText, ((screen.get_width() - cpsText.get_width()) // 2, (textSizeDescription + textSizeClicks) + (textSizeClicks // 4) + 4 + textSizeDescription - textSizeClicks // 1.4 + textSizeCPC))
         # keysOnScreen = makeText(f"{len(fallenKeys)}/{round(minForUltra)} falling keys until ultraclick!", (255, 255, 255), cpcFontClass)
         # screen.blit(keysOnScreen, ((screen.get_width() - keysOnScreen.get_width()) // 2, (textSizeDescription + textSizeClicks) + (textSizeClicks // 4) + 4 + textSizeDescription - textSizeClicks // 1.4 + textSizeCPC + textSizeCPC))
-        if (len(fallenKeys)/maximumFallenKeys) >= 0.5:
-            maxKeysOnScreen = makeText(f"{round((len(fallenKeys)/maximumFallenKeys)*100, 2)}% of your fallen key allowance!", (255, 255, 255), cpcFontClass)
-            screen.blit(maxKeysOnScreen, ((screen.get_width() - maxKeysOnScreen.get_width()) // 2, (textSizeDescription + textSizeClicks) + (textSizeClicks // 4) + 4 + textSizeDescription - textSizeClicks // 1.4 + textSizeCPC + textSizeCPC + textSizeCPC))
+        # if (len(fallenKeys)/maximumFallenKeys) >= 0.5:
+        #     maxKeysOnScreen = makeText(f"{round((len(fallenKeys)/maximumFallenKeys)*100, 2)}% of your fallen key allowance!", (255, 255, 255), cpcFontClass)
+        #     screen.blit(maxKeysOnScreen, ((screen.get_width() - maxKeysOnScreen.get_width()) // 2, (textSizeDescription + textSizeClicks) + (textSizeClicks // 4) + 4 + textSizeDescription - textSizeClicks // 1.4 + textSizeCPC + textSizeCPC + textSizeCPC))
         console.draw(screen)
         pygame.display.update()
         delta = clock.tick(60)
