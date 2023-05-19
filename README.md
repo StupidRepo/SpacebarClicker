@@ -23,9 +23,9 @@ An example would be:
 - [x] Saving your progress
 - [x] Custom in-game statuses
 - [x] Customisable window size
-- [] Better UI
-- [] Better README
-- [] More customisation
+- [ ] Better UI
+- [ ] Better README
+- [ ] More customisation
 ### Keybinds:
 ```
 Spacebar/Space/Return/Backspace - Click
