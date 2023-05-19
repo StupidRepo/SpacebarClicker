@@ -2,9 +2,6 @@
 A free and fun game made in [Python][py], using the [`pygame`][pg] library.
 ## Description
 Think of Cookie Clicker, but you have to press your space(bar) key to get 'spaces' (which are like cookies, but Spacebar Clicker's version).
-## Custom In-Game Statuses
-You can make your own in-game statuses by editing the `assets/core/descriptions.json` file.
-Formatting goes as follows:
 ```
 {clicks} - how many spaces you have
 {cpc} - how many spaces you get per click
@@ -21,15 +18,29 @@ An example would be:
   "text": "You have {clicks} {space}, and this message will show at 420+ spaces!"
 }
 ```
-## Keybinds
+## Features
+- [x] Clicking the spacebar to get spaces
+- [x] Saving your progress
+- [x] Custom in-game statuses
+- [x] Customisable window size
+- [] Better UI
+- [] Better README
+- [] More customisation
+### Keybinds:
 ```
 Spacebar/Space/Return/Backspace - Click
 M - Mute audio
 C - Reset window size
 F - Toggle resizeability
-X - Reset save file
+S - Save
+Left Shift + Right Shift + X - Reset Save
 A - Toggle Keyism
 ```
+### Console
+By default, the console is enabled. To toggle it, you will need to open `assets/core/settings.json` and change `console` to `true` if you want it on, or `false` if you want it off.
+### Custom In-Game Statuses
+You can make your own in-game statuses by editing the `assets/core/descriptions.json` file.
+Formatting goes as follows:
 ## Updating
 ### macOS + Windows + Linux
 To update the game, you will need to download the latest stable build from the [releases page][alls] (or an [unstable build](#installing)), and then run the game as normal from the new executable file.
@@ -69,10 +80,6 @@ You can contribute by making forking the repository, making your changes and the
 - Bradlee Barnes ([StupidRepo][bb-sr])
 ## License
 This project is licensed under the MIT License. See the [LICENSE](LICENSE.md) file for more information.
-## Debugging
-### macOS + Windows + Linux
-To enable Debug Mode, you will need to open `assets/core/settings.json` and change `debug` to `true`.
-To disable Debug Mode, do the same but change `debug` to `false` instead.
 
 [py]: https://www.python.org/
 [pg]: https://www.pygame.org/
