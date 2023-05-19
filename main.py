@@ -8,14 +8,62 @@ import sys
 from appdirs import user_data_dir
 import os
 from glob import glob
+from enum import Enum
+
+class Colours(Enum):
+    ERR = (255, 100, 100)
+    WARN = (255, 255, 100)
+    INFO = (100, 100, 255)
+    GOOD = (100, 255, 100)
 
 abspath = os.path.abspath(__file__)
 dname = os.path.dirname(abspath)
 os.chdir(dname)
 
-maximumFallenKeys = 1000
+maximumFallenKeys = 3000
+maxConsoleTexts = 7
+timeBeforeDeleteConsoleTexts = 4
+minForUltra = maximumFallenKeys / 2
+
+pygame.init()
+
+iconsGroup = pygame.sprite.Group()
+fontSizeConsole = 18
+consoleFont = pygame.font.Font("assets/fonts/title.ttf", fontSizeConsole)
 
 delta = 1
+
+settings = json.loads(open("assets/core/settings.json", "r").read())
+debugConsoleEnabled = settings["console"]
+
+def makeText(text, color, font):
+    return font.render(text, False, color)
+
+class DebugConsole():
+    def __init__(self) -> None:
+        self.texts = []
+        pass
+    
+    def log(self, text, colour=Colours.INFO):
+        if debugConsoleEnabled:
+            if len(self.texts) > maxConsoleTexts:
+                self.texts.pop(0)
+            self.texts.append({
+                "text": text,
+                "colour": colour.value,
+                "time": time.time()
+            })
+    
+    def draw(self, screen):
+        if debugConsoleEnabled:
+            surf = pygame.Surface((screen.get_width(), fontSizeConsole * len(self.texts)))
+            surf.set_alpha(180)
+            surf.fill((64, 64, 64))
+            screen.blit(surf, (0, screen.get_height()-(fontSizeConsole * len(self.texts))))
+            for text in self.texts:
+                screen.blit(makeText(text["text"], text["colour"], consoleFont), (0, screen.get_height()-(self.texts.index(text) * fontSizeConsole)-fontSizeConsole))
+                if time.time() - text["time"] > timeBeforeDeleteConsoleTexts:
+                    self.texts.remove(text)
 
 class FallenKey(pygame.sprite.Sprite):
     # constructor
@@ -30,7 +78,7 @@ class FallenKey(pygame.sprite.Sprite):
 
     def update(self):
         self.rect.y += self.speed
-        if self.rect.y > screen.get_height() + 100:
+        if self.rect.y > screen.get_height() + 25:
             self.kill()
 
 fallenKeys = pygame.sprite.Group()
@@ -49,13 +97,8 @@ descriptionsLocation = "assets/core/descriptions.json"
 if not os.path.exists(baseLocation):
     os.makedirs(baseLocation)
 
-pygame.init()
-
 scale = 1.4
 resizeable = False
-
-def makeText(text, color, font):
-    return font.render(text, False, color)
 
 screen_width, screen_height = round(1512/scale), round(1028/scale)
 screen = pygame.display.set_mode((screen_width, screen_height))
@@ -77,16 +120,20 @@ textSizeCPC = 19
 lastText = ""
 
 class Icon(pygame.sprite.Sprite):
-    def __init__(self, image, x=0, y=0):
+    def __init__(self, imageTrue, imageFalse, variable, x=0, y=0):
         super().__init__()
-        self.image = pygame.image.load(image)
+        self.image = pygame.image.load(imageTrue if variable else imageFalse)
         self.rect = self.image.get_rect()
-        self.x = x
-        self.y = y
+        self.rect.x = x + (48 * len(iconsGroup)) + 8 if len(iconsGroup) > 0 else x
+        self.rect.y = y
+        self.varString = variable
+        self.var = globals()[variable]
+        self.imageTrue = imageTrue
+        self.imageFalse = imageFalse
+        # self.x = x + (48 * len(iconsGroup)) + 8
 
-    def draw(self, screenLol):
-        # blit with position
-        screenLol.blit(self.image, (self.x, self.y))
+    def update(self):
+        self.image = pygame.image.load(self.imageTrue if globals()[self.varString] else self.imageFalse)
 
 try:
     with open(descriptionsLocation, "r") as descriptionsFile:
@@ -160,9 +207,11 @@ dataToSave = """{
 }"""
 
 def saveGame():
+    console.log("Saving game...")
     with open(saveLocation, "w") as saveFile:
         saveFile.write(dataToSave % (clicks, cpc, version))
         saveFile.close()
+        console.log("Game saved!", Colours.GOOD)
 
 def resetSaveGame(ourSpaces=None, ourCPC=None):
     os.remove(saveLocation)
@@ -212,10 +261,28 @@ pygame.display.set_caption("Spacebar Clicker: %s (%s space%s)" % (version, click
 muted = False
 antikey = False
 
-def bleep():
+# def ultraclick():
+#     global clicks, cpc
+#     soundUltra = getSoundByName("ultraclick", "special")
+#     if soundUltra is not None:
+#         soundUltra.play()
+#     clicks *= 3
+#     cpc *= 2
+
+def fall(isMClick=False):
     fallenX = random.randint(50, screen.get_width() - 50)
-    fallenKey = FallenKey(random.choice(keyImages), fallenX, 0)
+    if not isMClick:
+        fallenY = random.randint(0, 48*2)
+    else:
+        fallenY = random.randint(0, 48*8)
+    fallenKey = FallenKey(random.choice(keyImages), fallenX, fallenY)
     fallenKeys.add(fallenKey)
+
+def bleep():
+    fall()
+    # if len(fallenKeys) > minForUltra:
+        # fallenKeys.empty()
+        # ultraclick()
     if not muted:
         random.choice(sounds["clicks"])["sound"].play()
 
@@ -226,11 +293,16 @@ def superclick():
     theSound = getSoundByName("superclick", "special")
     if theSound is not None:
         theSound.play()
+    for i in range(random.randint(2, 5)):
+        fall()
 
 def megaclick():
     theSound = getSoundByName("megaclick", "special")
     if theSound is not None:
         theSound.play()
+    for i in range(random.randint(500, 1000)):
+        fall(True)
+
 
 percentFontClass = pygame.font.Font(titleFont, 17)
 descFontClass = pygame.font.Font(titleFont, textSizeDescription)
@@ -260,108 +332,146 @@ rainbowSpeed = 20
 
 clock = pygame.time.Clock()
 
+iconsGroup.add(Icon("assets/textures/mute.png", "assets/textures/unmute.png", 'muted'))
+iconsGroup.add(Icon("assets/textures/antikey.png", "assets/textures/key.png", 'antikey'))
+
+console = DebugConsole()
+
+lastSave = time.time()
+
+console.log("Welcome to Spacebar Clicker! Press - or = to change font size of console.", Colours.GOOD)
+
 while running:
-    barColour = colorsys.hsv_to_rgb((time.time() / rainbowSpeed) % 1, 1, 1)
-    barColour = (round(barColour[0] * 255), round(barColour[1] * 255), round(barColour[2] * 255))
+    try:
+        barColour = colorsys.hsv_to_rgb((time.time() / rainbowSpeed) % 1, 1, 1)
+        barColour = (round(barColour[0] * 255), round(barColour[1] * 255), round(barColour[2] * 255))
 
-    megaClickFormula = round(10 * (cpc // 2) + max((clicks // 20), 10))
-    screen.fill((155, 155, 155))
+        megaClickFormula = round(10 * (cpc // 2) + max((clicks // 20), 10))
+        screen.fill((155, 155, 155))
 
-    if len(fallenKeys) > 0 and not antikey:
         fallenKeys.update()
-        fallenKeys.draw(screen)
-    elif antikey and len(fallenKeys) > 0:
-        fallenKeys.empty()
-    elif len(fallenKeys) >= maximumFallenKeys:
-        fallenKeys.remove(fallenKeys.sprites()[0])
+        if len(fallenKeys) > 0 and not antikey:
+            fallenKeys.draw(screen)
+        if len(fallenKeys) > maximumFallenKeys:
+            fallenKeys.remove(fallenKeys.sprites()[0])
 
-    pygame.draw.rect(screen, barColour, (screen.get_width() // 4 - ((screen.get_width() // 4) / 1), screen.get_height() - 50, (screen.get_width() // 1) * (superClicks / maxSuperClicksUntilMegaClick), 30), 0, 3, 3, 3, 3)
-    pygame.draw.rect(screen, (255, 255, 255), (screen.get_width() // 4 - ((screen.get_width() // 4) / 1), screen.get_height() - 50, screen.get_width() // 1, 30), 3, 3, 3, 3, 3)
+        pygame.draw.rect(screen, barColour, (screen.get_width() // 4 - ((screen.get_width() // 4) / 1), screen.get_height() - 50, (screen.get_width() // 1) * (superClicks / maxSuperClicksUntilMegaClick), 30), 0, 3, 3, 3, 3)
+        pygame.draw.rect(screen, (255, 255, 255), (screen.get_width() // 4 - ((screen.get_width() // 4) / 1), screen.get_height() - 50, screen.get_width() // 1, 30), 3, 3, 3, 3, 3)
 
-    superClicksText = makeText(f"Megaclick will give you +{megaClickFormula:,} clicks! ({round(superClicks/maxSuperClicksUntilMegaClick * 100, 2)}% - {superClicks}/{maxSuperClicksUntilMegaClick})", (255, 255, 255), percentFontClass)
-    screen.blit(superClicksText, ((screen.get_width() - superClicksText.get_width()) // 2, screen.get_height() - 50 - 20))
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            print("Saving game...")
-            saveGame()
-            print("Game saved. Exiting!")
-            running = False
-        if event.type == AMBIENT_EVENT:
-            ambient()
-            if not impossible:
-                clicks += 100 * cpc
-            cpc += 1
-            AMBIENT_EVENT_TIME = random.randint(AMBIENT_EVENT_TIME_MIN, AMBIENT_EVENT_TIME_MAX)
-            pygame.time.set_timer(AMBIENT_EVENT, AMBIENT_EVENT_TIME, 1)
-        if event.type == SUPERCLICK_EVENT:
-            superClicks += 1
-            superclick()
-            clicks += 10 * cpc
-            SUPERCLICK_EVENT_TIME = random.randint(SUPERCLICK_EVENT_TIME_MIN, SUPERCLICK_EVENT_TIME_MAX)
-            pygame.time.set_timer(SUPERCLICK_EVENT, SUPERCLICK_EVENT_TIME, 1)
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_m:
-                muted = not muted
-            
-            if event.key == pygame.K_a:
-                antikey = not antikey
+        superClicksText = makeText(f"Megaclick will give you +{megaClickFormula:,} clicks! ({round(superClicks/maxSuperClicksUntilMegaClick * 100, 2)}% - {superClicks}/{maxSuperClicksUntilMegaClick})", (255, 255, 255), percentFontClass)
+        screen.blit(superClicksText, ((screen.get_width() - superClicksText.get_width()) // 2, screen.get_height() - 50 - 20))
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                print("Saving game...")
+                saveGame()
+                print("Game saved. Exiting!")
+                running = False
+            if event.type == AMBIENT_EVENT:
+                ambient()
+                if not impossible:
+                    clicks += 100 * cpc
+                cpc += 1
+                AMBIENT_EVENT_TIME = random.randint(AMBIENT_EVENT_TIME_MIN, AMBIENT_EVENT_TIME_MAX)
+                pygame.time.set_timer(AMBIENT_EVENT, AMBIENT_EVENT_TIME, 1)
+            if event.type == SUPERCLICK_EVENT:
+                superClicks += 1
+                superclick()
+                clicks += 10 * cpc
+                SUPERCLICK_EVENT_TIME = random.randint(SUPERCLICK_EVENT_TIME_MIN, SUPERCLICK_EVENT_TIME_MAX)
+                pygame.time.set_timer(SUPERCLICK_EVENT, SUPERCLICK_EVENT_TIME, 1)
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_m:
+                    muted = not muted
 
-            if event.key == pygame.K_c:
-                screen = pygame.display.set_mode((screen_width, screen_height),
-                                                 flags=(pygame.RESIZABLE if resizeable else 0))
+                # shitty fullscreen which doesn't work on macOS :/
+                # if event.key == pygame.K_o:
+                        # screen = pygame.display.set_mode((screen.get_width(), screen.get_height()), flags=(pygame.FULLSCREEN))
 
-            if event.key == pygame.K_f:
-                resizeable = not resizeable
-                screen = pygame.display.set_mode((screen.get_width(), screen.get_height()),
-                                                 flags=(pygame.RESIZABLE if resizeable else 0))
+                if event.key == pygame.K_s:
+                    saveGame()
+                
+                if event.key == pygame.K_a:
+                    antikey = not antikey
 
-            if event.key == pygame.K_h:
-                if pygame.key.get_pressed()[pygame.K_e] and pygame.key.get_pressed()[pygame.K_l] and pygame.key.get_pressed()[pygame.K_p]:
-                    secretMusicEnabled = not secretMusicEnabled
-                    if secretMusicEnabled:
-                        secretMusic.play(-1)
+                if event.key == pygame.K_c:
+                    screen = pygame.display.set_mode((screen_width, screen_height),
+                                                    flags=(pygame.RESIZABLE if resizeable else 0))
+
+                if event.key == pygame.K_f:
+                    resizeable = not resizeable
+                    screen = pygame.display.set_mode((screen.get_width(), screen.get_height()),
+                                                    flags=(pygame.RESIZABLE if resizeable else 0))
+
+                if event.key == pygame.K_h:
+                    if pygame.key.get_pressed()[pygame.K_e] and pygame.key.get_pressed()[pygame.K_l] and pygame.key.get_pressed()[pygame.K_p]:
+                        secretMusicEnabled = not secretMusicEnabled
+                        if secretMusicEnabled:
+                            secretMusic.play(-1)
+                        else:
+                            secretMusic.stop()
+                
+                if event.key == pygame.K_MINUS:
+                    fontSizeConsole -= 2
+                    consoleFont = pygame.font.Font("assets/fonts/title.ttf", fontSizeConsole)
+                    console.log("Font size changed to " + str(fontSizeConsole) + "!", Colours.GOOD)
+
+                if event.key == pygame.K_EQUALS:
+                    fontSizeConsole += 2
+                    consoleFont = pygame.font.Font("assets/fonts/title.ttf", fontSizeConsole)
+                    console.log("Font size changed to " + str(fontSizeConsole) + "!", Colours.GOOD)
+
+                if event.key == pygame.K_SPACE or event.key == pygame.K_RETURN or event.key == pygame.K_BACKSPACE:
+                    if impossible:
+                        if random.random() < chanceToClick:
+                            chanceToClick += 0.005
+                            clicks += cpc
+                            bleep()
                     else:
-                        secretMusic.stop()
-
-            if event.key == pygame.K_SPACE or event.key == pygame.K_RETURN or event.key == pygame.K_BACKSPACE:
-                if impossible:
-                    if random.random() < chanceToClick:
-                        chanceToClick += 0.005
+                        if random.random() < 0.05:
+                            superClicks += 1
                         clicks += cpc
                         bleep()
-                else:
-                    if random.random() < 0.05:
-                        superClicks += 1
-                    clicks += cpc
-                    bleep()
-                descriptionText = makeText(getDescriptionText(), (255, 255, 255), descFontClass)
+                    descriptionText = makeText(getDescriptionText(), (255, 255, 255), descFontClass)
 
-    if superClicks > maxSuperClicksUntilMegaClick:
-        superClicks = 0
-        megaclick()
-        clicks += megaClickFormula
-        maxSuperClicksUntilMegaClick = random.randint(40, 80)
+        if superClicks > maxSuperClicksUntilMegaClick:
+            superClicks = 0
+            megaclick()
+            clicks += megaClickFormula
+            maxSuperClicksUntilMegaClick = random.randint(40, 80)
 
-    clicks = min(clicks, sys.maxsize)
-    pygame.display.set_caption(
-        "Spacebar Clicker: %s (%s space%s)" % (version, f'{clicks:,}', '' if clicks == 1 else 's'))
+        clicks = min(clicks, sys.maxsize)
+        pygame.display.set_caption(
+            "Spacebar Clicker: %s (%s space%s)" % (version, f'{clicks:,}', '' if clicks == 1 else 's'))
 
-    cpcText = makeText(f"{cpc:,} spaces per click{f' (with a {round(chanceToClick * 100, 1)}% chance of a successful click)' if impossible else ''}", (255, 255, 255), cpcFontClass)
-    cpsText = makeText(f"{(10 * cpc):,} spaces per {round(SUPERCLICK_EVENT_TIME / 1000, 3)} seconds", (255, 255, 255), cpcFontClass)
-    spaceText = makeText(f"{clicks:,} space{'' if clicks == 1 else 's'}", (255, 255, 255), spaceFontClass)
+        cpcText = makeText(f"{cpc:,} spaces per click{f' (with a {round(chanceToClick * 100, 1)}% chance of a successful click)' if impossible else ''}", (255, 255, 255), cpcFontClass)
+        cpsText = makeText(f"{(10 * cpc):,} spaces per {round(SUPERCLICK_EVENT_TIME / 1000, 3)} seconds", (255, 255, 255), cpcFontClass)
+        spaceText = makeText(f"{clicks:,} space{'' if clicks == 1 else 's'}", (255, 255, 255), spaceFontClass)
 
-    Icon("assets/textures/mute.png" if muted else "assets/textures/unmute.png").draw(screen)
-    Icon("assets/textures/key.png" if not antikey else "assets/textures/antikey.png", 48+8, 0).draw(screen)
+        iconsGroup.update()
+        iconsGroup.draw(screen)
 
-    if pygame.key.get_pressed()[pygame.K_RSHIFT] and pygame.key.get_pressed()[pygame.K_LSHIFT] and pygame.key.get_pressed()[pygame.K_x]:
-        resetSaveGame()
-        running = False
+        if pygame.key.get_pressed()[pygame.K_RSHIFT] and pygame.key.get_pressed()[pygame.K_LSHIFT] and pygame.key.get_pressed()[pygame.K_x]:
+            resetSaveGame()
+            running = False
+        
+        if time.time() - lastSave > 10:
+            saveGame()
+            lastSave = time.time()
+            json.loads('"')
 
-    screen.blit(spaceText, ((screen.get_width() - spaceText.get_width()) // 2, 0))
-    screen.blit(descriptionText, ((screen.get_width() - descriptionText.get_width()) // 2, (textSizeDescription + textSizeClicks) + (textSizeClicks // 4) + 4 + textSizeDescription - textSizeClicks - textSizeClicks // 8))
-    screen.blit(cpcText, ((screen.get_width() - cpcText.get_width()) // 2, (textSizeDescription + textSizeClicks) + (textSizeClicks // 4) + 4 + textSizeDescription - textSizeClicks // 1.4))
-    screen.blit(cpsText, ((screen.get_width() - cpsText.get_width()) // 2, (textSizeDescription + textSizeClicks) + (textSizeClicks // 4) + 4 + textSizeDescription - textSizeClicks // 1.4 + textSizeCPC))
-    pygame.display.update()
-    delta = clock.tick(60)
+        screen.blit(spaceText, ((screen.get_width() - spaceText.get_width()) // 2, 0))
+        screen.blit(descriptionText, ((screen.get_width() - descriptionText.get_width()) // 2, (textSizeDescription + textSizeClicks) + (textSizeClicks // 4) + 4 + textSizeDescription - textSizeClicks - textSizeClicks // 8))
+        screen.blit(cpcText, ((screen.get_width() - cpcText.get_width()) // 2, (textSizeDescription + textSizeClicks) + (textSizeClicks // 4) + 4 + textSizeDescription - textSizeClicks // 1.4))
+        screen.blit(cpsText, ((screen.get_width() - cpsText.get_width()) // 2, (textSizeDescription + textSizeClicks) + (textSizeClicks // 4) + 4 + textSizeDescription - textSizeClicks // 1.4 + textSizeCPC))
+        # keysOnScreen = makeText(f"{len(fallenKeys)}/{round(minForUltra)} falling keys until ultraclick!", (255, 255, 255), cpcFontClass)
+        # screen.blit(keysOnScreen, ((screen.get_width() - keysOnScreen.get_width()) // 2, (textSizeDescription + textSizeClicks) + (textSizeClicks // 4) + 4 + textSizeDescription - textSizeClicks // 1.4 + textSizeCPC + textSizeCPC))
+        if (len(fallenKeys)/maximumFallenKeys) >= 0.5:
+            maxKeysOnScreen = makeText(f"{round((len(fallenKeys)/maximumFallenKeys)*100, 2)}% of your fallen key allowance!", (255, 255, 255), cpcFontClass)
+            screen.blit(maxKeysOnScreen, ((screen.get_width() - maxKeysOnScreen.get_width()) // 2, (textSizeDescription + textSizeClicks) + (textSizeClicks // 4) + 4 + textSizeDescription - textSizeClicks // 1.4 + textSizeCPC + textSizeCPC + textSizeCPC))
+        console.draw(screen)
+        pygame.display.update()
+        delta = clock.tick(60)
+    except Exception as e:
+        console.log("Error: " + str(e), Colours.ERR)
 
 pygame.quit()

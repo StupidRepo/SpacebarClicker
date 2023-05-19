@@ -69,6 +69,10 @@ You can contribute by making forking the repository, making your changes and the
 - Bradlee Barnes ([StupidRepo][bb-sr])
 ## License
 This project is licensed under the MIT License. See the [LICENSE](LICENSE.md) file for more information.
+## Debugging
+### macOS + Windows + Linux
+To enable Debug Mode, you will need to open `assets/core/settings.json` and change `debug` to `true`.
+To disable Debug Mode, do the same but change `debug` to `false` instead.
 
 [py]: https://www.python.org/
 [pg]: https://www.pygame.org/
