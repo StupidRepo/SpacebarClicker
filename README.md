@@ -34,7 +34,7 @@ C - Reset window size
 F - Toggle resizeability
 S - Save
 Left Shift + Right Shift + X - Reset Save
-A - Toggle Keyism
+A - Toggle Keys
 ```
 ### Console
 By default, the console is enabled. To toggle it, you will need to open `assets/core/settings.json` and change `console` to `true` if you want it on, or `false` if you want it off.
