@@ -2,22 +2,6 @@
 A free and fun game made in [Python][py], using the [`pygame`][pg] library.
 ## Description
 Think of Cookie Clicker, but you have to press your space(bar) key to get 'spaces' (which are like cookies, but Spacebar Clicker's version).
-```
-{clicks} - how many spaces you have
-{cpc} - how many spaces you get per click
-{chanceToClick} - the chance to get a space (hard mode only)
-{version} - the current version of the game
-{space} - is either 'spaces' if you have more than 1 space, or 'space' if you have 1 space
-{intlimit} - the limit of an integer
-{untilintlimit} - the amount of spaces until you reach the integer limit
-```
-An example would be:
-```json
-{
-  "count": 420,
-  "text": "You have {clicks} {space}, and this message will show at 420+ spaces!"
-}
-```
 ## Features
 - [x] Clicking the spacebar to get spaces
 - [x] Saving your progress
@@ -41,6 +25,22 @@ By default, the console is enabled. To toggle it, you will need to open `assets/
 ### Custom In-Game Statuses
 You can make your own in-game statuses by editing the `assets/core/descriptions.json` file.
 Formatting goes as follows:
+```
+{clicks} - how many spaces you have
+{cpc} - how many spaces you get per click
+{chanceToClick} - the chance to get a space (hard mode only)
+{version} - the current version of the game
+{space} - is either 'spaces' if you have more than 1 space, or 'space' if you have 1 space
+{intlimit} - the limit of an integer
+{untilintlimit} - the amount of spaces until you reach the integer limit
+```
+An example would be:
+```json
+{
+  "count": 420,
+  "text": "You have {clicks} {space}, and this message will show at 420+ spaces!"
+}
+```
 ## Updating
 ### macOS + Windows + Linux
 To update the game, you will need to download the latest stable build from the [releases page][alls] (or an [unstable build](#installing)), and then run the game as normal from the new executable file.
